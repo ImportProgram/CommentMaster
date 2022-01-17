@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<CommentMaster author="Brendan Fuller (https://importprogram.me)" version="311">
+  <ProjectName>CommentMaster</ProjectName>
+  <WrittenBy>Brendan Fuller</WrittenBy>
+  <WrittenOn>January, 17 2022</WrittenOn>
+  <FilePurpose>This file contains the main form for the application. All operations are performed by this application ocurr from this file.</FilePurpose>
+  <ProgramPurpose>The purpose of this program is to auto generate comments for an Advanced Visual Basic course. The program takes in a vb file and parses the code. Said code is placed into a class base structure to perfrom load all of the needed user interface components. The program also saves the comments in a XML file based on the selected file. All comments are then finally generate back into the file orignally made. Backups are recommend during operation.</ProgramPurpose>
+  <Constants>
+    <Constant name="BLOCK_ROW">
+      <Inline>The characters that make up  a comment block row. It's also used for the length of comments.</Inline>
+      <Block />
+    </Constant>
+    <Constant name="SOMETHING">
+      <Inline>Just a test constant. Use for debugging.</Inline>
+      <Block />
+    </Constant>
+  </Constants>
+  <Structures>
+    <Structure name="udtBillInfo">
+      <Description>The example structure provided in class. It's used for a billing data</Description>
+      <Dimensions>
+        <Dimension name="strCompanyName">What</Dimension>
+        <Dimension name="sngGoodsValue">does</Dimension>
+        <Dimension name="sngServicesValue">the</Dimension>
+        <Dimension name="sngSubTotal">fox</Dimension>
+        <Dimension name="sngSalesTax">say</Dimension>
+        <Dimension name="sngGrandTotal">?</Dimension>
+      </Dimensions>
+    </Structure>
+  </Structures>
+  <Globals>
+    <Global name="fileText">
+      <Inline>Holds all of the text of the loaded program. It does not inlcude the comments</Inline>
+      <Block>A string list of all of the lines of text loaded in the application</Block>
+    </Global>
+    <Global name="filePath">
+      <Inline>File being loaded and being parsed</Inline>
+      <Block>Path of the loaded file being parsed</Block>
+    </Global>
+    <Global name="path">
+      <Inline>Directory path of the file that was selected.</Inline>
+      <Block>Directory path of the file that was selected, used for XML path generation</Block>
+    </Global>
+    <Global name="xmlPath">
+      <Inline>The path for the XML file, which saves the configuration</Inline>
+      <Block>The path for the XML file</Block>
+    </Global>
+    <Global name="form">
+      <Inline />
+      <Block />
+    </Global>
+    <Global name="addedLines">
+      <Inline />
+      <Block />
+    </Global>
+    <Global name="copyFileText">
+      <Inline />
+      <Block />
+    </Global>
+  </Globals>
+  <Methods>
+    <Method name="btnOpenFile_Click">
+      <WrittenBy>Brendan Fuller</WrittenBy>
+      <WrittenOn>Jan 17, 2022</WrittenOn>
+      <Purpose />
+      <Dimensions>
+        <Dimension name="result" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="sender">Identifies which particular control that raised the click Event</Parameter>
+        <Parameter name="e">Holds the EventArgs Object sent To the routine</Parameter>
+      </Parameters>
+    </Method>
+    <Method name="btnGenerate_Click">
+      <WrittenBy>Brendan Fuller</WrittenBy>
+      <WrittenOn>Jan 17, 2022</WrittenOn>
+      <Purpose />
+      <Dimensions />
+      <Parameters>
+        <Parameter name="sender">Identifies which particular control that raised the click Event</Parameter>
+        <Parameter name="e">Holds the EventArgs Object sent To the routine</Parameter>
+      </Parameters>
+    </Method>
+    <Method name="btnReload_CLick">
+      <WrittenBy>Brendan Fuller</WrittenBy>
+      <WrittenOn>Jan 17, 2022</WrittenOn>
+      <Purpose />
+      <Dimensions />
+      <Parameters>
+        <Parameter name="sender">Identifies which particular control that raised the click Event</Parameter>
+        <Parameter name="e">Holds the EventArgs Object sent To the routine</Parameter>
+      </Parameters>
+    </Method>
+    <Method name="reload">
+      <WrittenBy>Brendan Fuller</WrittenBy>
+      <WrittenOn>Jan 17, 2022</WrittenOn>
+      <Purpose />
+      <Dimensions>
+        <Dimension name="fileName" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="setSelectedFile">
+      <WrittenBy>Brendan Fuller</WrittenBy>
+      <WrittenOn>Jan 17, 2022</WrittenOn>
+      <Purpose />
+      <Dimensions />
+      <Parameters />
+    </Method>
+    <Method name="loadFile">
+      <WrittenBy>Brendan Fuller</WrittenBy>
+      <WrittenOn>Jan 17, 2022</WrittenOn>
+      <Purpose />
+      <Dimensions>
+        <Dimension name="s">String of the file to be loaded</Dimension>
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="parseCode">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="currentLine" />
+        <Dimension name="inFormClass" />
+        <Dimension name="inMethod" />
+        <Dimension name="inStructure" />
+        <Dimension name="currentStructure" />
+        <Dimension name="currentMethod" />
+        <Dimension name="dimension" />
+        <Dimension name="constant" />
+        <Dimension name="name" />
+        <Dimension name="temp" />
+        <Dimension name="type" />
+        <Dimension name="hasReturn" />
+        <Dimension name="returnType" />
+        <Dimension name="vars" />
+        <Dimension name="variables" />
+        <Dimension name="hasParameters = True" />
+        <Dimension name="gMInstance" />
+        <Dimension name="var_name" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="loadXML">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="inCommentMaster" />
+        <Dimension name="inConstant" />
+        <Dimension name="inStructure" />
+        <Dimension name="inMethod" />
+        <Dimension name="inGlobal" />
+        <Dimension name="currentConstant" />
+        <Dimension name="currentStructure" />
+        <Dimension name="currentMethod" />
+        <Dimension name="currentGlobal" />
+        <Dimension name="c" />
+        <Dimension name="s" />
+        <Dimension name="m" />
+        <Dimension name="attribute" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="updateInterface">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="y" />
+        <Dimension name="i" />
+        <Dimension name="txt" />
+        <Dimension name="lbl" />
+        <Dimension name="name" />
+        <Dimension name="desc" />
+        <Dimension name="gTxt" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="interfaceToIndexedForm">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="method" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="saveXML">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="writer" />
+        <Dimension name="method" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="generateVariableWithDescWrapping">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="words" />
+        <Dimension name="total" />
+        <Dimension name="lines" />
+        <Dimension name="currentLine" />
+        <Dimension name="thisLine" />
+        <Dimension name="firstRow" />
+        <Dimension name="length" />
+        <Dimension name="spacesNeeded" />
+        <Dimension name="spaces" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="variable" />
+        <Parameter name="desc" />
+      </Parameters>
+    </Method>
+    <Method name="generateInlineWordWrapping">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="words" />
+        <Dimension name="total" />
+        <Dimension name="lines" />
+        <Dimension name="currentLine" />
+        <Dimension name="thisLine" />
+        <Dimension name="firstRow" />
+        <Dimension name="length" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="code" />
+        <Parameter name="desc" />
+      </Parameters>
+    </Method>
+    <Method name="generateWordWrappingBlock">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="words" />
+        <Dimension name="total" />
+        <Dimension name="lines" />
+        <Dimension name="currentLine" />
+        <Dimension name="thisLine" />
+        <Dimension name="length" />
+        <Dimension name="spacesNeeded" />
+        <Dimension name="spaces" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="text" />
+      </Parameters>
+    </Method>
+    <Method name="generateWordWrapping">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="words" />
+        <Dimension name="total" />
+        <Dimension name="lines" />
+        <Dimension name="currentLine" />
+        <Dimension name="thisLine" />
+        <Dimension name="length" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="text" />
+      </Parameters>
+    </Method>
+    <Method name="getLineSpacing">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions />
+      <Parameters>
+        <Parameter name="line" />
+      </Parameters>
+    </Method>
+    <Method name="PadCenterComment">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="lengthSpaces" />
+        <Dimension name="left" />
+        <Dimension name="right" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="line" />
+      </Parameters>
+    </Method>
+    <Method name="PadRightComment">
+      <WrittenBy />
+      <WrittenOn />
+      <ReturnDescription />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="lengthSpaces" />
+        <Dimension name="left" />
+        <Dimension name="right" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="line" />
+      </Parameters>
+    </Method>
+    <Method name="insertLines">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="number" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="startLine" />
+        <Parameter name="lines" />
+      </Parameters>
+    </Method>
+    <Method name="insertLine">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions />
+      <Parameters>
+        <Parameter name="line" />
+        <Parameter name="value" />
+      </Parameters>
+    </Method>
+    <Method name="insertLinesSpaces">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="number" />
+      </Dimensions>
+      <Parameters>
+        <Parameter name="startLine" />
+        <Parameter name="lines" />
+      </Parameters>
+    </Method>
+    <Method name="generateComments">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions>
+        <Dimension name="spaces" />
+        <Dimension name="global_keys" />
+        <Dimension name="hasGlobal" />
+        <Dimension name="desc" />
+        <Dimension name="name" />
+        <Dimension name="firstConstant" />
+        <Dimension name="descInline" />
+        <Dimension name="line" />
+        <Dimension name="text" />
+        <Dimension name="firstStructure" />
+        <Dimension name="dim_desc" />
+        <Dimension name="dim_line" />
+        <Dimension name="firstGlobal" />
+        <Dimension name="firstMethod" />
+        <Dimension name="method" />
+        <Dimension name="keys" />
+        <Dimension name="tempFilePath" />
+        <Dimension name="tempFile" />
+        <Dimension name="lastLineWasEmpty" />
+      </Dimensions>
+      <Parameters />
+    </Method>
+    <Method name="log">
+      <WrittenBy />
+      <WrittenOn />
+      <Purpose />
+      <Dimensions />
+      <Parameters>
+        <Parameter name="message" />
+      </Parameters>
+    </Method>
+  </Methods>
+</CommentMaster>

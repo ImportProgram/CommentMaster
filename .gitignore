@@ -1,0 +1,7 @@
+CommentMaster/bin
+CommentMaster/obj
+*.user
+*.suo
+.vs
+_ReSharper.*
+*.sln.cache
