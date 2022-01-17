@@ -1,4 +1,4 @@
-﻿Imports System.IO
+Imports System.IO
 Imports System.Text.RegularExpressions
 Imports System.Xml
 
@@ -26,9 +26,6 @@ Class GlobalConstant
         tab.TabIndex = 0
         tab.Text = n
         tab.UseVisualStyleBackColor = True
-
-
-
 
         Dim lbl As New Label()
 
@@ -66,7 +63,6 @@ Class GlobalConstant
         txtInline.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         txtInline.Size = New System.Drawing.Size(1007, 272)
         txtInline.TabIndex = 0
-
 
         tab.Controls.Add(txtInline)
         tab.Controls.Add(lbl)
@@ -149,7 +145,6 @@ Class GlobalDimension
     End Sub
 End Class
 
-
 Class Dimension
     Public line As Integer
     Public name As String
@@ -177,7 +172,6 @@ Class GlobalStructure
     Public desc As String
     Public dimensions As New Dictionary(Of String, Dimension)
 
-
     Public tab As TabPage
     Public txt As TextBox
 
@@ -194,10 +188,7 @@ Class GlobalStructure
         tab.UseVisualStyleBackColor = True
         tab.AutoScroll = True
 
-
-
     End Sub
-
 
     Public Sub updateInterface()
         Dim lbl As New Label()
@@ -208,7 +199,6 @@ Class GlobalStructure
         lbl.Size = New System.Drawing.Size(175, 32)
         lbl.TabIndex = 0
         lbl.Text = "Description For " + name
-
 
         txt = New TextBox()
         'txt.Font = New System.Drawing.Font("Cascadia Mono", 10.125!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -238,7 +228,6 @@ Class GlobalStructure
 End Class
 
 Class GlobalMethods
-    '-- comment block
 
     Public name As String
 
@@ -252,9 +241,6 @@ Class GlobalMethods
 
     Public parameters As New Dictionary(Of String, Dimension)
 
-
-    '-- comment block end
-
     Public line As Integer
     Public dimensions As New Dictionary(Of String, Dimension)
     Public hasReturn As Boolean = False
@@ -262,12 +248,10 @@ Class GlobalMethods
 
     Public tab As TabPage
 
-
     Public featureTabs As TabControl
     Public tabFeatureMain As TabPage
     Public tabFeatureVars As TabPage
     Public tabFeatureParameters As TabPage
-
 
     Public txtWrittenBy As TextBox
     Public txtWrittenOn As TextBox
@@ -303,7 +287,6 @@ Class GlobalMethods
 
         tab.Controls.Add(lbl)
 
-
         tabFeatureMain = New TabPage()
         tabFeatureMain.Location = New System.Drawing.Point(8, 46)
         tabFeatureMain.Name = "tabMethodDescriptions" + n
@@ -321,8 +304,6 @@ Class GlobalMethods
         tabFeatureVars.UseVisualStyleBackColor = True
         tabFeatureVars.AutoScroll = True
 
-
-
         tabFeatureParameters = New TabPage()
         tabFeatureParameters.Location = New System.Drawing.Point(8, 46)
         tabFeatureParameters.Name = "tabMethod_" + n
@@ -332,7 +313,6 @@ Class GlobalMethods
         tabFeatureParameters.UseVisualStyleBackColor = True
         tabFeatureParameters.AutoScroll = True
 
-        '---
         featureTabs = New TabControl()
         featureTabs.Location = New System.Drawing.Point(12, 70)
         featureTabs.Name = "tcMethod_" + n
@@ -343,7 +323,6 @@ Class GlobalMethods
         featureTabs.Controls.Add(tabFeatureMain)
         featureTabs.Controls.Add(tabFeatureParameters)
         featureTabs.Controls.Add(tabFeatureVars)
-
 
         tab.Controls.Add(featureTabs)
 
@@ -384,7 +363,6 @@ Class GlobalMethods
 
         tabFeatureMain.Controls.Add(lbl)
 
-
         txtWrittenBy = New TextBox()
         'txtWrittenBy.Font = New System.Drawing.Font("Cascadia Mono", 10.125!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
         txtWrittenBy.Location = New System.Drawing.Point(300, 100)
@@ -417,7 +395,6 @@ Class GlobalMethods
         txtWrittenOn.TabIndex = 1
         txtWrittenOn.Text = writtenOn
 
-
         tabFeatureMain.Controls.Add(txtWrittenOn)
 
         If hasReturn = True Then
@@ -430,7 +407,6 @@ Class GlobalMethods
             lbl.Text = "Return Type"
 
             tabFeatureMain.Controls.Add(lbl)
-
 
             txtReturnType = New TextBox()
             txtReturnType.Font = New System.Drawing.Font("Cascadia Mono", 10.125!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point)
@@ -515,12 +491,9 @@ Class GlobalMethods
         End If
     End Function
 
-
 End Class
 
-
 Class IndexedForm
-    '-- Start of form block
     Public fileName As String = ""
     Public projectName As String = ""
 
@@ -531,7 +504,6 @@ Class IndexedForm
     Public programPurpose As String = ""
 
     Public commentGlobals As Dictionary(Of String, String)
-    '-- End of form Block
 
     Public line As Integer
 
@@ -546,7 +518,6 @@ Class IndexedForm
 
     Public methods As New Dictionary(Of String, GlobalMethods)
 
-
     Sub addGlobals(name As String, line As Integer)
         If globals.ContainsKey(name) = False Then
             globals.Add(name, New GlobalDimension(name, line))
@@ -560,13 +531,12 @@ Class IndexedForm
     Sub addConstant(name As String, line As Integer)
         If name.Count() > 3 Then
             constants.Add(name, New GlobalConstant(name, "", line))
-        End if
+        End If
     End Sub
 
     Public Function getConstant(name As String) As GlobalConstant
         Return constants.GetValueOrDefault(name, Nothing)
     End Function
-
 
     Public Sub addStructure(name As String, line As Integer)
         structures.Add(name, New GlobalStructure(name, line))
@@ -575,7 +545,6 @@ Class IndexedForm
     Public Function getStructure(name As String) As GlobalStructure
         Return structures.GetValueOrDefault(name, Nothing)
     End Function
-
 
     Public Sub addMethod(name As String, line As Integer)
         If methods.ContainsKey(name) = False Then
@@ -589,30 +558,119 @@ Class IndexedForm
 End Class
 
 Public Class CommentMaster
+    '------------------------------------------------------------
+    '-                File Name: CommentMaster.vb               -
+    '-              Part of Project: CommentMaster              -
+    '------------------------------------------------------------
+    '-                Written By: Brendan Fuller                -
+    '-               Written On: January, 17 2022               -
+    '------------------------------------------------------------
+    '- File Purpose:                                            -
+    '-                                                          -
+    '- This file contains the main form for the application. All-
+    '- operations are performed by this application ocurr from  -
+    '- this file.                                               -
+    '------------------------------------------------------------
+    '- Program Purpose:                                         -
+    '-                                                          -
+    '- The purpose of this program is to auto generate comments -
+    '- for an Advanced Visual Basic course. The program takes in-
+    '- a vb file and parses the code. Said code is placed into a-
+    '- class base structure to perfrom load all of the needed   -
+    '- user interface components. The program also saves the    -
+    '- comments in a XML file based on the selected file. All   -
+    '- comments are then finally generate back into the file    -
+    '- orignally made. Backups are recommend during operation.  -
+    '------------------------------------------------------------
+    '- Global Variables Dictionary (alphabetically)             -
+    '- addedLines -                                             -
+    '- copyFileText -                                           -
+    '- filePath - Path of the loaded file being parsed          -
+    '- fileText - A string list of all of the lines of text     -
+    '-            loaded in the application                     -
+    '- form -                                                   -
+    '- path - Directory path of the file that was selected, used-
+    '-        for XML path generation                           -
+    '- xmlPath - The path for the XML file                      -
+    '------------------------------------------------------------
 
-    Const BLOCK_ROW = "'------------------------------------------------------------"
-    Const SOMETHING = 1
+    '---------------------------------------------------------------------------------------
+    '--- GLOBAL CONSTANTS --- GLOBAL CONSTANTS --- GLOBAL CONSTANTS --- GLOBAL CONSTANTS ---
+    '--- GLOBAL CONSTANTS --- GLOBAL CONSTANTS --- GLOBAL CONSTANTS --- GLOBAL CONSTANTS ---
+    '--- GLOBAL CONSTANTS --- GLOBAL CONSTANTS --- GLOBAL CONSTANTS --- GLOBAL CONSTANTS ---
+    '---------------------------------------------------------------------------------------
 
+    Const BLOCK_ROW = "'------------------------------------------------------------" ' The
+    '-                                                                                  characters
+    '-                                                                                  that make
+    '-                                                                                  up a
+    '-                                                                                  comment
+    '-                                                                                  block row.
+    '-                                                                                  It's also
+    '-                                                                                  used for
+    '-                                                                                  the length
+    '-                                                                                  of
+    '-                                                                                  comments.
+    Const SOMETHING = 1 ' Just a test constant. Use for debugging.
+
+    '-------------------------------------------------------------------------------------------
+    '--- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES ---
+    '--- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES ---
+    '--- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES ---
+    '-------------------------------------------------------------------------------------------
+
+    '-  -The example structure provided in class. It's used for a billing data
     Structure udtBillInfo
-        Dim strCompanyName As String      ' The name of the company for which the project was completed
-        Dim sngGoodsValue As Single       ' The total amount of goods consumed on the project
-        Dim sngServicesValue As Single    ' The total amount of services consumed on the project
-        Dim sngSubTotal As Single         ' The subtotal is the amount of goods added to services
-        Dim sngSalesTax As Single         ' The Michigan state sales tax calculated from the subtotal
-        Dim sngGrandTotal As Single       ' The total cost of the project (subtotal added to sales tax)
+        Dim strCompanyName As String ' #What
+        Dim sngGoodsValue As Single ' #does
+        Dim sngServicesValue As Single ' #the
+        Dim sngSubTotal As Single ' #fox
+        Dim sngSalesTax As Single ' #say
+        Dim sngGrandTotal As Single ' #?
     End Structure
 
+    '-------------------------------------------------------------------------------------------
+    '--- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES ---
+    '--- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES ---
+    '--- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES ---
+    '-------------------------------------------------------------------------------------------
 
+    Dim fileText As New List(Of String) ' Holds all of the text of the loaded program. It does not
+    '-                                    inlcude the comments
+    Dim filePath As String ' File being loaded and being parsed
+    Dim path As String ' Directory path of the file that was selected.
+    Dim xmlPath As String ' The path for the XML file, which saves the configuration
+    Dim form As IndexedForm ' 
+    Dim addedLines As Integer ' 
+    Dim copyFileText As New ArrayList ' 
 
-    Dim fileText As New List(Of String)
-    Dim filePath As String
-    Dim path As String
-    Dim xmlPath As String
-    Dim form As IndexedForm
-    Dim addedLines As Integer
-    Dim copyFileText As New ArrayList
+    '-------------------------------------------------------------------
+    '--- SUBPROGRAMS --- SUBPROGRAMS --- SUBPROGRAMS --- SUBPROGRAMS ---
+    '--- SUBPROGRAMS --- SUBPROGRAMS --- SUBPROGRAMS --- SUBPROGRAMS ---
+    '--- SUBPROGRAMS --- SUBPROGRAMS --- SUBPROGRAMS --- SUBPROGRAMS ---
+    '-------------------------------------------------------------------
 
     Private Sub btnOpenFile_Click(sender As Object, e As EventArgs) Handles btnOpenFile.Click
+
+        '------------------------------------------------------------
+        '-            Subprogram Name: btnOpenFile_Click            -
+        '------------------------------------------------------------
+        '-                Written By: Brendan Fuller                -
+        '-                 Written On: Jan 17, 2022                 -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- sender - Identifies which particular control that raised -
+        '-          the click Event                                 -
+        '- e - Holds the EventArgs Object sent To the routine       -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- result -                                                 -
+        '------------------------------------------------------------
+
         ' Call ShowDialog.
         OpenFileDialog1.FileName = ""
         Dim result As DialogResult = OpenFileDialog1.ShowDialog()
@@ -627,6 +685,26 @@ Public Class CommentMaster
     End Sub
 
     Private Sub btnGenerate_Click(sender As Object, e As EventArgs) Handles btnSaveFile.Click
+
+        '------------------------------------------------------------
+        '-            Subprogram Name: btnGenerate_Click            -
+        '------------------------------------------------------------
+        '-                Written By: Brendan Fuller                -
+        '-                 Written On: Jan 17, 2022                 -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- sender - Identifies which particular control that raised -
+        '-          the click Event                                 -
+        '- e - Holds the EventArgs Object sent To the routine       -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+
         saveXML()
         log("[CM] Saved commented to XML at: " + xmlPath)
         generateComments()
@@ -634,12 +712,49 @@ Public Class CommentMaster
     End Sub
 
     Private Sub btnReload_CLick(sender As Object, e As EventArgs) Handles btnParseFile.Click
+
+        '------------------------------------------------------------
+        '-             Subprogram Name: btnReload_CLick             -
+        '------------------------------------------------------------
+        '-                Written By: Brendan Fuller                -
+        '-                 Written On: Jan 17, 2022                 -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- sender - Identifies which particular control that raised -
+        '-          the click Event                                 -
+        '- e - Holds the EventArgs Object sent To the routine       -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+
         reload()
         log("[CM] Reloading")
     End Sub
 
-
     Private Sub reload()
+
+        '------------------------------------------------------------
+        '-                  Subprogram Name: reload                 -
+        '------------------------------------------------------------
+        '-                Written By: Brendan Fuller                -
+        '-                 Written On: Jan 17, 2022                 -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- fileName -                                               -
+        '------------------------------------------------------------
+
         path = System.IO.Path.GetDirectoryName(filePath)
         Dim fileName As String = System.IO.Path.GetFileName(filePath).Replace(".", "_")
         xmlPath = System.IO.Path.Combine(path, fileName + ".comments.xml")
@@ -651,9 +766,45 @@ Public Class CommentMaster
     End Sub
 
     Private Sub setSelectedFile()
+
+        '------------------------------------------------------------
+        '-             Subprogram Name: setSelectedFile             -
+        '------------------------------------------------------------
+        '-                Written By: Brendan Fuller                -
+        '-                 Written On: Jan 17, 2022                 -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+
         lblCurrentSelectedFile.Text = filePath
     End Sub
     Private Sub loadFile()
+
+        '------------------------------------------------------------
+        '-                 Subprogram Name: loadFile                -
+        '------------------------------------------------------------
+        '-                Written By: Brendan Fuller                -
+        '-                 Written On: Jan 17, 2022                 -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- s - String of the file to be loaded                      -
+        '------------------------------------------------------------
+
         Try
             ' Read in text.
             If System.IO.File.Exists(filePath) Then
@@ -677,16 +828,48 @@ Public Class CommentMaster
     End Sub
     Private Sub parseCode()
 
+        '------------------------------------------------------------
+        '-                Subprogram Name: parseCode                -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- constant -                                               -
+        '- currentLine -                                            -
+        '- currentMethod -                                          -
+        '- currentStructure -                                       -
+        '- dimension -                                              -
+        '- gMInstance -                                             -
+        '- hasParameters = True -                                   -
+        '- hasReturn -                                              -
+        '- inFormClass -                                            -
+        '- inMethod -                                               -
+        '- inStructure -                                            -
+        '- name -                                                   -
+        '- returnType -                                             -
+        '- temp -                                                   -
+        '- type -                                                   -
+        '- var_name -                                               -
+        '- variables -                                              -
+        '- vars -                                                   -
+        '------------------------------------------------------------
+
         Dim currentLine As Integer = 1
 
         Dim inFormClass As Boolean = False
         Dim inMethod As Boolean = False
         Dim inStructure As Boolean = False
 
-
         Dim currentStructure As String = ""
         Dim currentMethod As String = ""
-
 
         form = New IndexedForm
 
@@ -733,7 +916,6 @@ Public Class CommentMaster
                             currentMethod = ""
                             inMethod = False
                         End If
-
 
                     End If
 
@@ -813,7 +995,6 @@ Public Class CommentMaster
                             hasParameters = False
                         End If
 
-
                         log("[CM] Adding Method (" + type + "): " + name + " with parameters:")
                         'Now get a local reference to the current method we are adding
                         Dim gMInstance As GlobalMethods = form.getMethod(name)
@@ -855,6 +1036,36 @@ Public Class CommentMaster
         log("[CM] End Line: " + currentLine.ToString)
     End Sub
     Private Sub loadXML()
+
+        '------------------------------------------------------------
+        '-                 Subprogram Name: loadXML                 -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- attribute -                                              -
+        '- c -                                                      -
+        '- currentConstant -                                        -
+        '- currentGlobal -                                          -
+        '- currentMethod -                                          -
+        '- currentStructure -                                       -
+        '- inCommentMaster -                                        -
+        '- inConstant -                                             -
+        '- inGlobal -                                               -
+        '- inMethod -                                               -
+        '- inStructure -                                            -
+        '- m -                                                      -
+        '- s -                                                      -
+        '------------------------------------------------------------
+
         If System.IO.File.Exists(xmlPath) Then
             log("[CM] Loading save from XML: " + xmlPath)
             Dim inCommentMaster As Boolean = False
@@ -864,13 +1075,10 @@ Public Class CommentMaster
             Dim inMethod As Boolean = False
             Dim inGlobal As Boolean = False
 
-
             Dim currentConstant As String
             Dim currentStructure As String
             Dim currentMethod As String
             Dim currentGlobal As String
-
-
 
             Using reader As XmlReader = XmlReader.Create(xmlPath)
                 While reader.Read()
@@ -907,7 +1115,6 @@ Public Class CommentMaster
                             End If
                         End If
 
-
                         If inConstant = True Then
                             Dim c As GlobalConstant = form.getConstant(currentConstant)
                             If c IsNot Nothing Then
@@ -923,7 +1130,6 @@ Public Class CommentMaster
                                 End If
                             End If
                         End If
-
 
                         If inGlobal = True Then
                             Dim c As GlobalDimension = form.getGlobal(currentGlobal)
@@ -941,7 +1147,6 @@ Public Class CommentMaster
                             End If
                         End If
 
-
                         If inStructure = True Then
                             Dim s As GlobalStructure = form.getStructure(currentStructure)
                             If s IsNot Nothing Then
@@ -952,7 +1157,6 @@ Public Class CommentMaster
                                 End If
                             End If
                         End If
-
 
                         If inMethod = True Then
                             Dim m As GlobalMethods = form.getMethod(currentMethod)
@@ -1087,6 +1291,30 @@ Public Class CommentMaster
         End If
     End Sub
     Private Sub updateInterface()
+
+        '------------------------------------------------------------
+        '-             Subprogram Name: updateInterface             -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- desc -                                                   -
+        '- gTxt -                                                   -
+        '- i -                                                      -
+        '- lbl -                                                    -
+        '- name -                                                   -
+        '- txt -                                                    -
+        '- y -                                                      -
+        '------------------------------------------------------------
+
         txtProjectName.Text = form.projectName
         txtFormName.Text = form.fileName
         txtAuthorName.Text = form.writtenBy
@@ -1108,7 +1336,6 @@ Public Class CommentMaster
             form.constants(key).updateInterface()
         Next
 
-
         For Each key In form.structures.Keys()
             form.structures(key).tab.Controls.Clear()
             tabControlStructs.Controls.Add(form.structures(key).tab)
@@ -1126,7 +1353,6 @@ Public Class CommentMaster
                 lbl.Size = New System.Drawing.Size(175, 32)
                 lbl.TabIndex = 0
                 lbl.Text = name
-
 
                 txt.Location = New System.Drawing.Point(500, y)
                 txt.Name = "txtStructDim_" + key + "_" + var
@@ -1167,12 +1393,10 @@ Public Class CommentMaster
                 lbl.TabIndex = 0
                 lbl.Text = form.methods(key).dimensions(var).name
 
-
                 txt.Location = New System.Drawing.Point(500, y)
                 txt.Name = "txtMethodFeature_" + key + "_" + var
                 txt.Size = New System.Drawing.Size(1700, 272)
                 txt.Text = desc
-
 
                 form.methods(key).tabFeatureVars.Controls.Add(lbl)
                 form.methods(key).tabFeatureVars.Controls.Add(txt)
@@ -1193,7 +1417,6 @@ Public Class CommentMaster
                 lbl.TabIndex = 0
                 lbl.Text = form.methods(key).parameters(var).name
 
-
                 txt.Location = New System.Drawing.Point(500, y)
                 txt.Name = "txtMethodFeature_" + key + "_" + var
                 txt.Size = New System.Drawing.Size(1000, 272)
@@ -1207,6 +1430,24 @@ Public Class CommentMaster
         Next
     End Sub
     Private Sub interfaceToIndexedForm()
+
+        '------------------------------------------------------------
+        '-          Subprogram Name: interfaceToIndexedForm         -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- method -                                                 -
+        '------------------------------------------------------------
+
         form.projectName = txtProjectName.Text
 
         form.writtenBy = txtAuthorName.Text
@@ -1257,6 +1498,25 @@ Public Class CommentMaster
         Next
     End Sub
     Private Sub saveXML()
+
+        '------------------------------------------------------------
+        '-                 Subprogram Name: saveXML                 -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- method -                                                 -
+        '- writer -                                                 -
+        '------------------------------------------------------------
+
         interfaceToIndexedForm()
         Dim writer As New XmlTextWriter(xmlPath, System.Text.Encoding.UTF8)
 
@@ -1265,10 +1525,8 @@ Public Class CommentMaster
         writer.Indentation = 2
         writer.WriteStartElement("CommentMaster")
 
-
         writer.WriteAttributeString("author", "Brendan Fuller (https://importprogram.me)")
         writer.WriteAttributeString("version", "311")
-
 
         'Project Name
         writer.WriteStartElement("ProjectName")
@@ -1351,12 +1609,10 @@ Public Class CommentMaster
         Next
         writer.WriteEndElement()
 
-
         'Methods
         writer.WriteStartElement("Methods")
         For Each key In form.methods.Keys()
             Dim method As GlobalMethods = form.methods(key)
-
 
             writer.WriteStartElement("Method")
             writer.WriteAttributeString("name", key)
@@ -1368,7 +1624,6 @@ Public Class CommentMaster
             writer.WriteStartElement("WrittenOn")
             writer.WriteString(method.writtenOn)
             writer.WriteEndElement()
-
 
             If method.hasReturn = True Then
                 writer.WriteStartElement("ReturnDescription")
@@ -1403,12 +1658,41 @@ Public Class CommentMaster
         Next
         writer.WriteEndElement()
 
-
         writer.WriteEndElement()
         writer.WriteEndDocument()
         writer.Close()
     End Sub
     Private Function generateVariableWithDescWrapping(variable As String, desc As String) As List(Of String)
+
+        '------------------------------------------------------------
+        '-     Subprogram Name: generateVariableWithDescWrapping    -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- variable -                                               -
+        '- desc -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- currentLine -                                            -
+        '- firstRow -                                               -
+        '- length -                                                 -
+        '- lines -                                                  -
+        '- spaces -                                                 -
+        '- spacesNeeded -                                           -
+        '- thisLine -                                               -
+        '- total -                                                  -
+        '- words -                                                  -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- List -                                                   -
+        '------------------------------------------------------------
+
         'Split a list of words
         Dim words As String() = Split(Regex.Replace(desc.Replace(vbCrLf, ""), " {2,}", " "), " ")
         'Get a total length of the comment minus 4 for the comment structure
@@ -1464,6 +1748,34 @@ Public Class CommentMaster
         Return lines
     End Function
     Private Function generateInlineWordWrapping(code As String, desc As String) As List(Of String)
+
+        '------------------------------------------------------------
+        '-        Subprogram Name: generateInlineWordWrapping       -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- code -                                                   -
+        '- desc -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- currentLine -                                            -
+        '- firstRow -                                               -
+        '- length -                                                 -
+        '- lines -                                                  -
+        '- thisLine -                                               -
+        '- total -                                                  -
+        '- words -                                                  -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- List -                                                   -
+        '------------------------------------------------------------
+
         'Split a list of words
         Dim words As String() = Split(Regex.Replace(desc.Replace(vbCrLf, ""), " {2,}", " "), " ")
         'Get a total length of the comment minus 4 for the comment structure
@@ -1507,6 +1819,34 @@ Public Class CommentMaster
         Return lines
     End Function
     Private Function generateWordWrappingBlock(text As String) As List(Of String)
+
+        '------------------------------------------------------------
+        '-        Subprogram Name: generateWordWrappingBlock        -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- text -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- currentLine -                                            -
+        '- length -                                                 -
+        '- lines -                                                  -
+        '- spaces -                                                 -
+        '- spacesNeeded -                                           -
+        '- thisLine -                                               -
+        '- total -                                                  -
+        '- words -                                                  -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- List -                                                   -
+        '------------------------------------------------------------
+
         'Split a list of words
         Dim words As String() = Split(Regex.Replace(text.Replace(vbCrLf, ""), " {2,}", " "), " ")
         'Get a total length of the comment minus 4 for the comment structure
@@ -1561,6 +1901,32 @@ Public Class CommentMaster
         Return lines
     End Function
     Private Function generateWordWrapping(text As String) As List(Of String)
+
+        '------------------------------------------------------------
+        '-           Subprogram Name: generateWordWrapping          -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- text -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- currentLine -                                            -
+        '- length -                                                 -
+        '- lines -                                                  -
+        '- thisLine -                                               -
+        '- total -                                                  -
+        '- words -                                                  -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- List -                                                   -
+        '------------------------------------------------------------
+
         'Split a list of words
         Dim words As String() = Split(Regex.Replace(text.Replace(vbCrLf, ""), " {2,}", " "), " ")
         'Get a total length of the comment minus 4 for the comment structure
@@ -1599,10 +1965,54 @@ Public Class CommentMaster
     End Function
 
     Private Function getLineSpacing(line As Integer) As String
+
+        '------------------------------------------------------------
+        '-              Subprogram Name: getLineSpacing             -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- line -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- String -                                                 -
+        '------------------------------------------------------------
+
         Return copyFileText(line).ToString().Count - LTrim(copyFileText(line).ToString()).Count
     End Function
 
     Private Function PadCenterComment(line As String) As String
+
+        '------------------------------------------------------------
+        '-             Subprogram Name: PadCenterComment            -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- line -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- left -                                                   -
+        '- lengthSpaces -                                           -
+        '- right -                                                  -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- String -                                                 -
+        '------------------------------------------------------------
+
         Dim lengthSpaces As Double = (BLOCK_ROW.Count - line.Count - 4) / 2
         'MessageBox.Show(lengthSpaces)
         Dim left As String
@@ -1619,6 +2029,29 @@ Public Class CommentMaster
     End Function
 
     Private Function PadRightComment(line As String) As String
+
+        '------------------------------------------------------------
+        '-             Subprogram Name: PadRightComment             -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- line -                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- left -                                                   -
+        '- lengthSpaces -                                           -
+        '- right -                                                  -
+        '------------------------------------------------------------
+        '- Returns:                                                 -
+        '- String -                                                 -
+        '------------------------------------------------------------
+
         Dim lengthSpaces As Double = (BLOCK_ROW.Count - line.Count - 4)
         'MessageBox.Show(lengthSpaces)
         Dim left As String
@@ -1635,6 +2068,25 @@ Public Class CommentMaster
     End Function
 
     Private Sub insertLines(startLine As String, lines As List(Of String))
+
+        '------------------------------------------------------------
+        '-               Subprogram Name: insertLines               -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- startLine -                                              -
+        '- lines -                                                  -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- number -                                                 -
+        '------------------------------------------------------------
+
         Dim number As Integer = 0
         For Each s As String In lines
             insertLine(startLine + number, "    " + s)
@@ -1643,11 +2095,49 @@ Public Class CommentMaster
     End Sub
 
     Private Sub insertLine(line As Integer, value As String)
+
+        '------------------------------------------------------------
+        '-                Subprogram Name: insertLine               -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- line -                                                   -
+        '- value -                                                  -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+
         addedLines = addedLines + 1
         copyFileText.Insert(line, value + vbCrLf)
     End Sub
 
     Private Sub insertLinesSpaces(startLine As String, lines As List(Of String), spaces As String)
+
+        '------------------------------------------------------------
+        '-            Subprogram Name: insertLinesSpaces            -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- startLine -                                              -
+        '- lines -                                                  -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- number -                                                 -
+        '------------------------------------------------------------
+
         Dim number As Integer = 0
         For Each s As String In lines
             insertLine(startLine + number, spaces + s)
@@ -1656,6 +2146,42 @@ Public Class CommentMaster
     End Sub
 
     Private Sub generateComments()
+
+        '------------------------------------------------------------
+        '-             Subprogram Name: generateComments            -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- desc -                                                   -
+        '- descInline -                                             -
+        '- dim_desc -                                               -
+        '- dim_line -                                               -
+        '- firstConstant -                                          -
+        '- firstGlobal -                                            -
+        '- firstMethod -                                            -
+        '- firstStructure -                                         -
+        '- global_keys -                                            -
+        '- hasGlobal -                                              -
+        '- keys -                                                   -
+        '- lastLineWasEmpty -                                       -
+        '- line -                                                   -
+        '- method -                                                 -
+        '- name -                                                   -
+        '- spaces -                                                 -
+        '- tempFile -                                               -
+        '- tempFilePath -                                           -
+        '- text -                                                   -
+        '------------------------------------------------------------
+
         addedLines = 0
         copyFileText.Clear()
 
@@ -1707,13 +2233,10 @@ Public Class CommentMaster
         End If
         insertLine(form.line + addedLines, spaces + BLOCK_ROW)
 
-
         'CONSTANTS
         'While we loop, we need to append the bannar for GLOBAL CONSTANTS, so first iteration will be used
         Dim firstConstant As Boolean = True
         'Iterate over all of the constants
-
-
 
         For Each key In form.constants.Keys()
 
@@ -1746,8 +2269,6 @@ Public Class CommentMaster
 
         Next
 
-
-
         'STRUCTURES
         Dim firstStructure As Boolean = True
         'MessageBox.Show(form.constants.Keys().Count.ToString)
@@ -1767,7 +2288,6 @@ Public Class CommentMaster
                 insertLine(line - 1 + addedLines, "") 'Add an empty line
 
             End If
-
 
             insertLines(line - 1 + addedLines, generateWordWrapping("-" + desc))
 
@@ -1808,7 +2328,6 @@ Public Class CommentMaster
 
             End If
 
-
             'Get the current value of the text (because we are going to be replacing the line)
             Dim text As String = copyFileText(line + addedLines - 1)
             'Now check if on the line if the contains a apostrophe with spaces on both sides. If so, get the first index of the split.
@@ -1824,7 +2343,6 @@ Public Class CommentMaster
             'Now insert the description (with the code of the variable, which is text)
             insertLines(line + addedLines, generateInlineWordWrapping(text, desc))
         Next
-
 
         'Methods
         Dim firstMethod As Boolean = True
@@ -1845,8 +2363,6 @@ Public Class CommentMaster
                 insertLine(line - 1 + addedLines, "") 'Add an empty line
                 spaces = "        "
             End If
-
-
 
             'Subprogram's Name
             insertLine(line + addedLines, "")
@@ -1873,7 +2389,6 @@ Public Class CommentMaster
 
                 insertLinesSpaces(line + addedLines, generateVariableWithDescWrapping(name, desc), spaces)
             Next
-
 
             'Check if we have no parameters, if so just list none
             If form.methods(key).parameters.Count = 0 Then
@@ -1909,10 +2424,8 @@ Public Class CommentMaster
             insertLine(line + addedLines, "")
         Next
 
-
         Dim tempFilePath As String = System.IO.Path.Combine(path, filePath)
         'Dim tempFile As FileStream = System.IO.File.Open(tempFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite)
-        '-- Form Block Comment
         Using sr As StreamWriter = New StreamWriter(tempFilePath)
             Dim lastLineWasEmpty As String = False
             For Each s As String In copyFileText
@@ -1936,6 +2449,24 @@ Public Class CommentMaster
     End Sub
 
     Private Sub log(message As String)
+
+        '------------------------------------------------------------
+        '-                   Subprogram Name: log                   -
+        '------------------------------------------------------------
+        '-                       Written By:                        -
+        '-                       Written On:                        -
+        '------------------------------------------------------------
+        '- Subprogram Purpose:                                      -
+        '-                                                          -
+        '-                                                          -
+        '------------------------------------------------------------
+        '- Parameter Dictionary (in parameter order):               -
+        '- message -                                                -
+        '------------------------------------------------------------
+        '- Local Variable Dictionary (alphabetically):              -
+        '- (None)                                                   -
+        '------------------------------------------------------------
+
         lstConsole.Items.Add(message)
         lstConsole.TopIndex = lstConsole.Items.Count - 1
     End Sub
