@@ -29,13 +29,13 @@
     </Structure>
   </Structures>
   <Globals>
-    <Global name="fileText">
-      <Inline>Holds all of the text of the loaded program. It does not inlcude the comments</Inline>
-      <Block>A string list of all of the lines of text loaded in the application</Block>
+    <Global name="lstStrFileText">
+      <Inline />
+      <Block />
     </Global>
-    <Global name="filePath">
-      <Inline>File being loaded and being parsed</Inline>
-      <Block>Path of the loaded file being parsed</Block>
+    <Global name="strProgramFilePath">
+      <Inline />
+      <Block />
     </Global>
     <Global name="path">
       <Inline>Directory path of the file that was selected.</Inline>
@@ -45,7 +45,7 @@
       <Inline>The path for the XML file, which saves the configuration</Inline>
       <Block>The path for the XML file</Block>
     </Global>
-    <Global name="form">
+    <Global name="udtForm">
       <Inline />
       <Block />
     </Global>
@@ -59,9 +59,9 @@
     </Global>
   </Globals>
   <Methods>
-    <Method name="btnOpenFile_Click">
-      <WrittenBy>Brendan Fuller</WrittenBy>
-      <WrittenOn>Jan 17, 2022</WrittenOn>
+    <Method name="btnOpenFile">
+      <WrittenBy />
+      <WrittenOn />
       <Purpose />
       <Dimensions>
         <Dimension name="result" />
@@ -71,9 +71,9 @@
         <Parameter name="e">Holds the EventArgs Object sent To the routine</Parameter>
       </Parameters>
     </Method>
-    <Method name="btnGenerate_Click">
-      <WrittenBy>Brendan Fuller</WrittenBy>
-      <WrittenOn>Jan 17, 2022</WrittenOn>
+    <Method name="btnGenerate">
+      <WrittenBy />
+      <WrittenOn />
       <Purpose />
       <Dimensions />
       <Parameters>
@@ -112,7 +112,7 @@
       <WrittenOn>Jan 17, 2022</WrittenOn>
       <Purpose />
       <Dimensions>
-        <Dimension name="s">String of the file to be loaded</Dimension>
+        <Dimension name="strLine" />
       </Dimensions>
       <Parameters />
     </Method>
@@ -121,14 +121,14 @@
       <WrittenOn />
       <Purpose />
       <Dimensions>
-        <Dimension name="currentLine" />
+        <Dimension name="intCurrentLine" />
         <Dimension name="inFormClass" />
-        <Dimension name="inMethod" />
-        <Dimension name="inStructure" />
-        <Dimension name="currentStructure" />
-        <Dimension name="currentMethod" />
-        <Dimension name="dimension" />
-        <Dimension name="constant" />
+        <Dimension name="blnInMethod" />
+        <Dimension name="blnInStructure" />
+        <Dimension name="strCurrentStructure" />
+        <Dimension name="strCurrentMethod" />
+        <Dimension name="str" />
+        <Dimension name="strConstant" />
         <Dimension name="name" />
         <Dimension name="temp" />
         <Dimension name="type" />
@@ -147,16 +147,20 @@
       <WrittenOn />
       <Purpose />
       <Dimensions>
-        <Dimension name="inCommentMaster" />
-        <Dimension name="inConstant" />
-        <Dimension name="inStructure" />
-        <Dimension name="inMethod" />
-        <Dimension name="inGlobal" />
+        <Dimension name="blnInCommentMaster" />
+        <Dimension name="blnInConstant" />
+        <Dimension name="blnInStructure" />
+        <Dimension name="blnInMethod" />
+        <Dimension name="blnInGlobal" />
         <Dimension name="currentConstant" />
         <Dimension name="currentStructure" />
         <Dimension name="currentMethod" />
         <Dimension name="currentGlobal" />
-        <Dimension name="c" />
+        <Dimension name="objGlobalConstant" />
+        <Dimension name="objGlobal" />
+        <Dimension name="objGlobalStructure" />
+        <Dimension name="objGlobalMethods" />
+        <Dimension name="strAttribute" />
         <Dimension name="s" />
         <Dimension name="m" />
         <Dimension name="attribute" />

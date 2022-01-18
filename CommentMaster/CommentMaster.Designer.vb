@@ -127,7 +127,7 @@ Partial Class CommentMaster
         Me.txtProgramPurpose.Multiline = True
         Me.txtProgramPurpose.Name = "txtProgramPurpose"
         Me.txtProgramPurpose.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtProgramPurpose.Size = New System.Drawing.Size(1007, 275)
+        Me.txtProgramPurpose.Size = New System.Drawing.Size(1300, 275)
         Me.txtProgramPurpose.TabIndex = 9
         '
         'txtFIlePurpose
@@ -333,7 +333,7 @@ Partial Class CommentMaster
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(13.0!, 32.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(2500, 1500)
+        Me.ClientSize = New System.Drawing.Size(2475, 1400)
         Me.Controls.Add(Me.lstConsole)
         Me.Controls.Add(Me.lblCurrentSelectedFile)
         Me.Controls.Add(Me.btnSaveFile)
@@ -341,7 +341,7 @@ Partial Class CommentMaster
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.btnOpenFile)
         Me.Name = "Form1"
-        Me.Text = "CommentMaster311"
+        Me.Text = "CommentMaser"
         Me.TabControl1.ResumeLayout(False)
         Me.tabMainForm.ResumeLayout(False)
         Me.tabMainForm.PerformLayout()
@@ -350,9 +350,8 @@ Partial Class CommentMaster
         Me.ResumeLayout(False)
         Me.PerformLayout()
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(2500, 1500)
         Me.MinimizeBox = True
-        Me.MinimumSize = New System.Drawing.Size(2500, 1500)
+
 
     End Sub
 

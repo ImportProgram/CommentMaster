@@ -494,10 +494,10 @@ Class GlobalMethods
 End Class
 
 Class IndexedForm
-    Public fileName As String = ""
+    Public strFileName As String = ""
     Public projectName As String = ""
 
-    Public writtenBy As String = ""
+    Public strWrittenBy As String = ""
     Public writtenOn As String = ""
 
     Public filePurpose As String = ""
@@ -585,12 +585,11 @@ Public Class CommentMaster
     '- Global Variables Dictionary (alphabetically)             -
     '- addedLines -                                             -
     '- copyFileText -                                           -
-    '- filePath - Path of the loaded file being parsed          -
-    '- fileText - A string list of all of the lines of text     -
-    '-            loaded in the application                     -
-    '- form -                                                   -
+    '- lstStrFileText -                                         -
     '- path - Directory path of the file that was selected, used-
     '-        for XML path generation                           -
+    '- strProgramFilePath -                                     -
+    '- udtForm -                                                -
     '- xmlPath - The path for the XML file                      -
     '------------------------------------------------------------
 
@@ -619,14 +618,14 @@ Public Class CommentMaster
     '--- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES ---
     '-------------------------------------------------------------------------------------------
 
-    '-  -The example structure provided in class. It's used for a billing data
+    '-  The example structure provided in class. It's used for a billing data
     Structure udtBillInfo
-        Dim strCompanyName As String ' #What
-        Dim sngGoodsValue As Single ' #does
-        Dim sngServicesValue As Single ' #the
-        Dim sngSubTotal As Single ' #fox
-        Dim sngSalesTax As Single ' #say
-        Dim sngGrandTotal As Single ' #?
+        Dim strCompanyName As String ' What
+        Dim sngGoodsValue As Single ' does
+        Dim sngServicesValue As Single ' the
+        Dim sngSubTotal As Single ' fox
+        Dim sngSalesTax As Single ' say
+        Dim sngGrandTotal As Single ' ?
     End Structure
 
     '-------------------------------------------------------------------------------------------
@@ -635,12 +634,11 @@ Public Class CommentMaster
     '--- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES --- GLOBAL VARIABLES ---
     '-------------------------------------------------------------------------------------------
 
-    Dim fileText As New List(Of String) ' Holds all of the text of the loaded program. It does not
-    '-                                    inlcude the comments
-    Dim filePath As String ' File being loaded and being parsed
+    Dim lstStrFileText As New List(Of String) ' 
+    Dim strProgramFilePath As String ' 
     Dim path As String ' Directory path of the file that was selected.
     Dim xmlPath As String ' The path for the XML file, which saves the configuration
-    Dim form As IndexedForm ' 
+    Dim udtForm As IndexedForm ' 
     Dim addedLines As Integer ' 
     Dim copyFileText As New ArrayList ' 
 
@@ -653,10 +651,10 @@ Public Class CommentMaster
     Private Sub btnOpenFile_Click(sender As Object, e As EventArgs) Handles btnOpenFile.Click
 
         '------------------------------------------------------------
-        '-            Subprogram Name: btnOpenFile_Click            -
+        '-               Subprogram Name: btnOpenFile               -
         '------------------------------------------------------------
-        '-                Written By: Brendan Fuller                -
-        '-                 Written On: Jan 17, 2022                 -
+        '-                       Written By:                        -
+        '-                       Written On:                        -
         '------------------------------------------------------------
         '- Subprogram Purpose:                                      -
         '-                                                          -
@@ -679,7 +677,7 @@ Public Class CommentMaster
         If result = Windows.Forms.DialogResult.OK Then
 
             ' Get the file name.
-            filePath = OpenFileDialog1.FileName
+            strProgramFilePath = OpenFileDialog1.FileName
             reload()
         End If
     End Sub
@@ -687,10 +685,10 @@ Public Class CommentMaster
     Private Sub btnGenerate_Click(sender As Object, e As EventArgs) Handles btnSaveFile.Click
 
         '------------------------------------------------------------
-        '-            Subprogram Name: btnGenerate_Click            -
+        '-               Subprogram Name: btnGenerate               -
         '------------------------------------------------------------
-        '-                Written By: Brendan Fuller                -
-        '-                 Written On: Jan 17, 2022                 -
+        '-                       Written By:                        -
+        '-                       Written On:                        -
         '------------------------------------------------------------
         '- Subprogram Purpose:                                      -
         '-                                                          -
@@ -755,8 +753,8 @@ Public Class CommentMaster
         '- fileName -                                               -
         '------------------------------------------------------------
 
-        path = System.IO.Path.GetDirectoryName(filePath)
-        Dim fileName As String = System.IO.Path.GetFileName(filePath).Replace(".", "_")
+        path = System.IO.Path.GetDirectoryName(strProgramFilePath)
+        Dim fileName As String = System.IO.Path.GetFileName(strProgramFilePath).Replace(".", "_")
         xmlPath = System.IO.Path.Combine(path, fileName + ".comments.xml")
         setSelectedFile()
         loadFile()
@@ -784,7 +782,7 @@ Public Class CommentMaster
         '- (None)                                                   -
         '------------------------------------------------------------
 
-        lblCurrentSelectedFile.Text = filePath
+        lblCurrentSelectedFile.Text = strProgramFilePath
     End Sub
     Private Sub loadFile()
 
@@ -802,19 +800,19 @@ Public Class CommentMaster
         '- (None)                                                   -
         '------------------------------------------------------------
         '- Local Variable Dictionary (alphabetically):              -
-        '- s - String of the file to be loaded                      -
+        '- strLine -                                                -
         '------------------------------------------------------------
 
         Try
             ' Read in text.
-            If System.IO.File.Exists(filePath) Then
-                fileText.Clear()
-                Using streamReader As New StreamReader(filePath)
+            If System.IO.File.Exists(strProgramFilePath) Then
+                lstStrFileText.Clear()
+                Using streamReader As New StreamReader(strProgramFilePath)
                     While Not streamReader.EndOfStream
-                        Dim s As String = streamReader.ReadLine()
-                        If s.Trim().StartsWith("'-") = False Then
+                        Dim strLine As String = streamReader.ReadLine()
+                        If strLine.Trim().StartsWith("'-") = False Then
                             'Now add the line to the fileText
-                            fileText.Add(s + vbCrLf)
+                            lstStrFileText.Add(strLine + vbCrLf)
                         End If
                     End While
                 End Using
@@ -842,19 +840,19 @@ Public Class CommentMaster
         '- (None)                                                   -
         '------------------------------------------------------------
         '- Local Variable Dictionary (alphabetically):              -
-        '- constant -                                               -
-        '- currentLine -                                            -
-        '- currentMethod -                                          -
-        '- currentStructure -                                       -
-        '- dimension -                                              -
+        '- blnInMethod -                                            -
+        '- blnInStructure -                                         -
         '- gMInstance -                                             -
         '- hasParameters = True -                                   -
         '- hasReturn -                                              -
         '- inFormClass -                                            -
-        '- inMethod -                                               -
-        '- inStructure -                                            -
+        '- intCurrentLine -                                         -
         '- name -                                                   -
         '- returnType -                                             -
+        '- str -                                                    -
+        '- strConstant -                                            -
+        '- strCurrentMethod -                                       -
+        '- strCurrentStructure -                                    -
         '- temp -                                                   -
         '- type -                                                   -
         '- var_name -                                               -
@@ -862,104 +860,104 @@ Public Class CommentMaster
         '- vars -                                                   -
         '------------------------------------------------------------
 
-        Dim currentLine As Integer = 1
+        Dim intCurrentLine As Integer = 1
 
         Dim inFormClass As Boolean = False
-        Dim inMethod As Boolean = False
-        Dim inStructure As Boolean = False
+        Dim blnInMethod As Boolean = False
+        Dim blnInStructure As Boolean = False
 
-        Dim currentStructure As String = ""
-        Dim currentMethod As String = ""
+        Dim strCurrentStructure As String = ""
+        Dim strCurrentMethod As String = ""
 
-        form = New IndexedForm
+        udtForm = New IndexedForm
 
         'Set some defaults
-        form.fileName = System.IO.Path.GetFileName(filePath)
-        form.writtenBy = txtAuthorName.Text
+        udtForm.strFileName = System.IO.Path.GetFileName(strProgramFilePath)
+        udtForm.strWrittenBy = txtAuthorName.Text
 
-        For Each s As String In fileText
+        For Each strLine As String In lstStrFileText
             'MessageBox.Show(s)
-            If s.StartsWith("'-") = False Then
+            If strLine.StartsWith("'-") = False Then
                 'Check if we are in the form block of code
                 If inFormClass = True Then
                     'Are we in a structure block of code?
-                    If inStructure = True Then
+                    If blnInStructure = True Then
                         'Check if there is a variable within the structure.
-                        If s.Contains("Dim" + Space(1)) = True Then
-                            Dim dimension As String = Split(Split(s, "Dim")(1), "As")(0).Trim()
-                            form.getStructure(currentStructure).addDimension(dimension, currentLine)
-                            log("   - " + dimension)
+                        If strLine.Contains("Dim" + Space(1)) = True Then
+                            Dim strDimension As String = Split(Split(strLine, "Dim")(1), "As")(0).Trim()
+                            udtForm.getStructure(strCurrentStructure).addDimension(strDimension, intCurrentLine)
+                            log("   - " + strDimension)
                         End If
                         'Check if the line contains the ending to a structure, if so no longer within a structure
-                        If s.Contains("End" + Space(1) + "Structure") Then
-                            currentStructure = ""
-                            inStructure = False
+                        If strLine.Contains("End" + Space(1) + "Structure") Then
+                            strCurrentStructure = ""
+                            blnInStructure = False
                         End If
                     End If
 
                     'Are we in a method?
-                    If inMethod = True Then
+                    If blnInMethod = True Then
                         'Check for local variables in a method, and makes sure to not account for ReDim's
-                        If s.Contains("Dim" + Space(1)) = True And s.Contains("ReDim") = False Then
-                            Dim dimension As String = Split(Split(s, "Dim")(1), "As")(0).Trim()
-                            form.getMethod(currentMethod).addDimension(dimension, currentLine)
-                            log("    ~ Dim: " + dimension)
+                        If strLine.Contains("Dim" + Space(1)) = True And strLine.Contains("ReDim") = False Then
+                            Dim strDimension As String = Split(Split(strLine, "Dim")(1), "As")(0).Trim()
+                            udtForm.getMethod(strCurrentMethod).addDimension(strDimension, intCurrentLine)
+                            log("    ~ Dim: " + strDimension)
                         End If
                         'Checks for consts, and adds them to the list of local variables
-                        If s.Contains("Const" + Space(1)) = True Then
-                            Dim constant As String = Split(Split(s, "Const")(1), "=")(0).Trim()
-                            form.getMethod(currentMethod).addDimension(constant, currentLine)
-                            log("    ~ Const: " + constant)
+                        If strLine.Contains("Const" + Space(1)) = True Then
+                            Dim strConstant As String = Split(Split(strLine, "Const")(1), "=")(0).Trim()
+                            udtForm.getMethod(strCurrentMethod).addDimension(strConstant, intCurrentLine)
+                            log("    ~ Const: " + strConstant)
                         End If
                         'Check if are the end of the method, which is either e function or a subroutine.
-                        If s.Contains("End" + Space(1) + "Function") Or s.Contains("End" + Space(1) + "Sub") Then
-                            currentMethod = ""
-                            inMethod = False
+                        If strLine.Contains("End" + Space(1) + "Function") Or strLine.Contains("End" + Space(1) + "Sub") Then
+                            strCurrentMethod = ""
+                            blnInMethod = False
                         End If
 
                     End If
 
                     'Are we NOT in a struct and NOT in a method (function/sub)?
-                    If inStructure = False And inMethod = False Then
+                    If blnInStructure = False And blnInMethod = False Then
 
                         'If the current line is a var, add it global vars
-                        If s.Contains("Dim" + Space(1)) = True Then
-                            Dim dimension As String = Split(Split(s, "Dim")(1), "As")(0).Trim()
-                            form.addGlobals(dimension, currentLine)
-                            lstConsole.Items.Add("[CM] Adding Global: " + dimension)
+                        If strLine.Contains("Dim" + Space(1)) = True Then
+                            Dim strDimension As String = Split(Split(strLine, "Dim")(1), "As")(0).Trim()
+                            udtForm.addGlobals(strDimension, intCurrentLine)
+                            lstConsole.Items.Add($"[CM] Adding Global: {strDimension}")
                         End If
 
                         'If the current line is a constant, add it global constant
-                        If s.Contains("Const" + Space(1)) = True Then
-                            Dim constant As String = Split(Split(s, "Const")(1), "=")(0).Trim()
-                            form.addConstant(constant, currentLine)
-                            log("[CM] Adding Constant: " + constant)
+                        If strLine.Contains("Const" + Space(1)) = True Then
+                            Dim strConstant As String = Split(Split(strLine, "Const")(1), "=")(0).Trim()
+                            udtForm.addConstant(strConstant, intCurrentLine)
+                            log($"[CM] Adding Constant: {strConstant}")
                         End If
 
                     End If
                     'Check for the beggining of a structure, then change the boolean values and make a new instance of the struct within IndexedForm
-                    If s.Contains(Space(1) + "Structure" + Space(1)) = True And s.Contains(Space(1) + "End") = False Then
-                        Dim name As String = Split(s, "Structure" + Space(1))(1).Trim()
-                        inStructure = True
-                        currentStructure = name
-                        form.addStructure(currentStructure, currentLine)
-                        log("[CM] Adding Struct: " + name + " with:")
+                    If strLine.Contains(Space(1) + "Structure" + Space(1)) = True And strLine.Contains(Space(1) + "End") = False Then
+                        Dim name As String = Split(strLine, "Structure" + Space(1))(1).Trim()
+                        blnInStructure = True
+                        strCurrentStructure = name
+                        udtForm.addStructure(strCurrentStructure, intCurrentLine)
+                        log($"[CM] Adding Struct: {name} with:")
 
                     End If
 
                     'Check if we have a method (function or subroutine) and grab the parameters and return type
-                    If s.Contains("Sub" + Space(1)) = True Or s.Contains("Function" + Space(1)) Then
+                    If blnInStructure = False AndAlso (strLine.Contains("Sub" + Space(1)) = True Or strLine.Contains("Function" + Space(1))) Then
                         Dim temp As String()
                         Dim type As String = "?"
                         Dim hasReturn As Boolean = False
                         Dim returnType As String
                         'Check if we have a sub or a function
-                        If s.Contains("Sub" + Space(1)) = True Then
-                            temp = Split(Split(s, "Sub")(1), "(")
+                        If strLine.Contains("Sub" + Space(1)) = True Then
+                            temp = Split(Split(strLine, "Sub")(1), "(")
                             type = "Sub"
                         Else
                             'If we have a function, its likely to have a return type
-                            temp = Split(Split(s, "Function")(1), "(")
+                            temp = Split(Split(strLine, "Function")(1), "(")
                             type = "Function"
                             hasReturn = True
                             returnType = Split(temp(1), ")", 2)(1).Trim()
@@ -967,9 +965,9 @@ Public Class CommentMaster
                         End If
 
                         'Get the name from the current looped line
-                        Dim name As String = temp(0).Trim()
+                        Dim name As String = temp(0).Trim().Replace("_Click", "")
                         'Now create the method, with reference to the line in the List
-                        form.addMethod(name, currentLine)
+                        udtForm.addMethod(name, intCurrentLine)
 
                         'Now get the variables (both constants and dims)
                         Dim vars As String = Split(temp(1), ")")(0)
@@ -995,9 +993,9 @@ Public Class CommentMaster
                             hasParameters = False
                         End If
 
-                        log("[CM] Adding Method (" + type + "): " + name + " with parameters:")
+                        log($"[CM] Adding Method ({type}): {name} with parameters:")
                         'Now get a local reference to the current method we are adding
-                        Dim gMInstance As GlobalMethods = form.getMethod(name)
+                        Dim gMInstance As GlobalMethods = udtForm.getMethod(name)
 
                         'Set the value of who writes the methods, if the users sets the Written On for the project 
                         'Before file loads, ALL methods will have the same written by name :D
@@ -1014,26 +1012,26 @@ Public Class CommentMaster
                             Next
                         End If
                         'Tell this loop we are in a method
-                        inMethod = True
+                        blnInMethod = True
                         'Set the current name of the method
-                        currentMethod = name
+                        strCurrentMethod = name
                         'If we have a return type, just set the vaue to the instance of the method we have above
                         If hasReturn = True Then
                             gMInstance.returnType = returnType.Replace("As", "").Trim()
-                            log("    * " + returnType)
+                            log($"    * {returnType}")
                             gMInstance.hasReturn = True
                         End If
                     End If
                 End If
 
-                If s.Contains("Public Class" + Space(1)) Then
+                If strLine.Contains("Public Class" + Space(1)) Then
                     inFormClass = True
-                    form.line = currentLine
+                    udtForm.line = intCurrentLine
                 End If
             End If
-            currentLine = currentLine + 1
+            intCurrentLine = intCurrentLine + 1
         Next
-        log("[CM] End Line: " + currentLine.ToString)
+        log($"[CM] End Line: {intCurrentLine.ToString}")
     End Sub
     Private Sub loadXML()
 
@@ -1052,233 +1050,235 @@ Public Class CommentMaster
         '------------------------------------------------------------
         '- Local Variable Dictionary (alphabetically):              -
         '- attribute -                                              -
-        '- c -                                                      -
+        '- blnInCommentMaster -                                     -
+        '- blnInConstant -                                          -
+        '- blnInGlobal -                                            -
+        '- blnInMethod -                                            -
+        '- blnInStructure -                                         -
         '- currentConstant -                                        -
         '- currentGlobal -                                          -
         '- currentMethod -                                          -
         '- currentStructure -                                       -
-        '- inCommentMaster -                                        -
-        '- inConstant -                                             -
-        '- inGlobal -                                               -
-        '- inMethod -                                               -
-        '- inStructure -                                            -
         '- m -                                                      -
+        '- objGlobal -                                              -
+        '- objGlobalConstant -                                      -
+        '- objGlobalMethods -                                       -
+        '- objGlobalStructure -                                     -
         '- s -                                                      -
+        '- strAttribute -                                           -
         '------------------------------------------------------------
 
         If System.IO.File.Exists(xmlPath) Then
             log("[CM] Loading save from XML: " + xmlPath)
-            Dim inCommentMaster As Boolean = False
 
-            Dim inConstant As Boolean = False
-            Dim inStructure As Boolean = False
-            Dim inMethod As Boolean = False
-            Dim inGlobal As Boolean = False
+            Dim blnInCommentMaster As Boolean = False
+            Dim blnInConstant As Boolean = False
+            Dim blnInStructure As Boolean = False
+            Dim blnInMethod As Boolean = False
+            Dim blnInGlobal As Boolean = False
 
             Dim currentConstant As String
             Dim currentStructure As String
             Dim currentMethod As String
             Dim currentGlobal As String
 
-            Using reader As XmlReader = XmlReader.Create(xmlPath)
-                While reader.Read()
+            Using objXMLReader As XmlReader = XmlReader.Create(xmlPath)
+                While objXMLReader.Read()
                     ' Check for start elements.
-                    If reader.IsStartElement() Then
+                    If objXMLReader.IsStartElement() Then
 
                         ' See if perls element or article element.
-                        If reader.Name = "CommentMaster" Then
-
-                            inCommentMaster = True
+                        If objXMLReader.Name = "CommentMaster" Then
+                            blnInCommentMaster = True
                         End If
 
-                        If inCommentMaster = True And inStructure = False And inMethod = False And inGlobal = False And inConstant = False Then
-                            If reader.Name = "ProjectName" Then
-                                If reader.Read() Then
-                                    form.projectName = reader.Value.Trim()
+                        If blnInCommentMaster = True And Not blnInStructure And Not blnInMethod And Not blnInGlobal And Not blnInConstant Then
+                            If objXMLReader.Name = "ProjectName" Then
+                                If objXMLReader.Read() Then
+                                    udtForm.projectName = objXMLReader.Value.Trim()
                                 End If
-                            ElseIf reader.Name = "WrittenBy" Then
-                                If reader.Read() Then
-                                    form.writtenBy = reader.Value.Trim()
+                            ElseIf objXMLReader.Name = "WrittenBy" Then
+                                If objXMLReader.Read() Then
+                                    udtForm.strWrittenBy = objXMLReader.Value.Trim()
                                 End If
-                            ElseIf reader.Name = "WrittenOn" Then
-                                If reader.Read() Then
-                                    form.writtenOn = reader.Value.Trim()
+                            ElseIf objXMLReader.Name = "WrittenOn" Then
+                                If objXMLReader.Read() Then
+                                    udtForm.writtenOn = objXMLReader.Value.Trim()
                                 End If
-                            ElseIf reader.Name = "FilePurpose" Then
-                                If reader.Read() Then
-                                    form.filePurpose = reader.Value.Trim()
+                            ElseIf objXMLReader.Name = "FilePurpose" Then
+                                If objXMLReader.Read() Then
+                                    udtForm.filePurpose = objXMLReader.Value.Trim()
                                 End If
-                            ElseIf reader.Name = "ProgramPurpose" Then
-                                If reader.Read() Then
-                                    form.programPurpose = reader.Value.Trim()
+                            ElseIf objXMLReader.Name = "ProgramPurpose" Then
+                                If objXMLReader.Read() Then
+                                    udtForm.programPurpose = objXMLReader.Value.Trim()
                                 End If
                             End If
                         End If
 
-                        If inConstant = True Then
-                            Dim c As GlobalConstant = form.getConstant(currentConstant)
-                            If c IsNot Nothing Then
+                        If blnInConstant = True Then
+                            Dim objGlobalConstant As GlobalConstant = udtForm.getConstant(currentConstant)
+                            If objGlobalConstant IsNot Nothing Then
                                 'MessageBox.Show(reader.Name)
-                                If reader.Name = "Inline" Then
-                                    If reader.Read() Then
-                                        c.inlineDesc = reader.Value.Trim()
+                                If objXMLReader.Name = "Inline" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalConstant.inlineDesc = objXMLReader.Value.Trim()
                                     End If
-                                ElseIf reader.Name = "Block" Then
-                                    If reader.Read() Then
-                                        c.blockDesc = reader.Value.Trim()
-                                    End If
-                                End If
-                            End If
-                        End If
-
-                        If inGlobal = True Then
-                            Dim c As GlobalDimension = form.getGlobal(currentGlobal)
-                            If c IsNot Nothing Then
-
-                                If reader.Name = "Inline" Then
-                                    If reader.Read() Then
-                                        c.inlineDesc = reader.Value.Trim()
-                                    End If
-                                ElseIf reader.Name = "Block" Then
-                                    If reader.Read() Then
-                                        c.blockDesc = reader.Value.Trim()
+                                ElseIf objXMLReader.Name = "Block" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalConstant.blockDesc = objXMLReader.Value.Trim()
                                     End If
                                 End If
                             End If
                         End If
 
-                        If inStructure = True Then
-                            Dim s As GlobalStructure = form.getStructure(currentStructure)
-                            If s IsNot Nothing Then
-                                If reader.Name = "Description" Then
-                                    If reader.Read() Then
-                                        s.desc = reader.Value.Trim()
+                        If blnInGlobal = True Then
+                            Dim objGlobalDimension As GlobalDimension = udtForm.getGlobal(currentGlobal)
+                            If objGlobalDimension IsNot Nothing Then
+                                If objXMLReader.Name = "Inline" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalDimension.inlineDesc = objXMLReader.Value.Trim()
+                                    End If
+                                ElseIf objXMLReader.Name = "Block" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalDimension.blockDesc = objXMLReader.Value.Trim()
                                     End If
                                 End If
                             End If
                         End If
 
-                        If inMethod = True Then
-                            Dim m As GlobalMethods = form.getMethod(currentMethod)
-                            If m IsNot Nothing Then
-                                If reader.Name = "Purpose" Then
-                                    If reader.Read() Then
-                                        m.purpose = reader.Value.Trim()
-                                    End If
-                                ElseIf reader.Name = "WrittenOn" Then
-                                    If reader.Read() Then
-                                        m.writtenOn = reader.Value.Trim()
-                                    End If
-                                ElseIf reader.Name = "WrittenBy" Then
-                                    If reader.Read() Then
-                                        m.writtenBy = reader.Value.Trim()
+                        If blnInStructure = True Then
+                            Dim objGlobalStructure As GlobalStructure = udtForm.getStructure(currentStructure)
+                            If objGlobalStructure IsNot Nothing Then
+                                If objXMLReader.Name = "Description" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalStructure.desc = objXMLReader.Value.Trim()
                                     End If
                                 End If
-                                If m.hasReturn Then
-                                    If reader.Name = "ReturnDescription" Then
-                                        If reader.Read() Then
-                                            m.returnDescription = reader.Value.Trim()
+                            End If
+                        End If
+
+                        If blnInMethod = True Then
+                            Dim objGlobalMethods As GlobalMethods = udtForm.getMethod(currentMethod)
+                            If objGlobalMethods IsNot Nothing Then
+                                If objXMLReader.Name = "Purpose" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalMethods.purpose = objXMLReader.Value.Trim()
+                                    End If
+                                ElseIf objXMLReader.Name = "WrittenOn" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalMethods.writtenOn = objXMLReader.Value.Trim()
+                                    End If
+                                ElseIf objXMLReader.Name = "WrittenBy" Then
+                                    If objXMLReader.Read() Then
+                                        objGlobalMethods.writtenBy = objXMLReader.Value.Trim()
+                                    End If
+                                End If
+                                If objGlobalMethods.hasReturn Then
+                                    If objXMLReader.Name = "ReturnDescription" Then
+                                        If objXMLReader.Read() Then
+                                            objGlobalMethods.returnDescription = objXMLReader.Value.Trim()
                                         End If
                                     End If
                                 End If
                             End If
                         End If
 
-                        If reader.Name = "Dimension" Then
-                            If inStructure = True Then
-                                Dim attribute As String = reader("name")
-                                Dim s As GlobalStructure = form.getStructure(currentStructure)
-                                If attribute IsNot Nothing And s IsNot Nothing Then
-                                    If s.dimensions.ContainsKey(attribute) = True Then
-                                        If reader.Read() Then
+                        If objXMLReader.Name = "Dimension" Then
+                            If blnInStructure = True Then
+                                Dim strAttribute As String = objXMLReader("name")
+                                Dim s As GlobalStructure = udtForm.getStructure(currentStructure)
+                                If strAttribute IsNot Nothing And s IsNot Nothing Then
+                                    If s.dimensions.ContainsKey(strAttribute) = True Then
+                                        If objXMLReader.Read() Then
 
-                                            s.dimensions(attribute).desc = reader.Value.Trim()
+                                            s.dimensions(strAttribute).desc = objXMLReader.Value.Trim()
                                         End If
                                     End If
                                 End If
-                            ElseIf inMethod = True Then
-                                Dim attribute As String = reader("name")
-                                Dim m As GlobalMethods = form.getMethod(currentMethod)
-                                If attribute IsNot Nothing And m IsNot Nothing Then
-                                    If m.dimensions.ContainsKey(attribute) = True Then
-                                        If reader.Read() Then
-                                            m.dimensions(attribute).desc = reader.Value.Trim()
+                            ElseIf blnInMethod = True Then
+                                Dim strAttribute As String = objXMLReader("name")
+                                Dim m As GlobalMethods = udtForm.getMethod(currentMethod)
+                                If strAttribute IsNot Nothing And m IsNot Nothing Then
+                                    If m.dimensions.ContainsKey(strAttribute) = True Then
+                                        If objXMLReader.Read() Then
+                                            m.dimensions(strAttribute).desc = objXMLReader.Value.Trim()
                                         End If
                                     End If
                                 End If
                             End If
                         End If
 
-                        If reader.Name = "Parameter" Then
-                            If inMethod = True Then
-                                Dim attribute As String = reader("name")
-                                Dim m As GlobalMethods = form.getMethod(currentMethod)
+                        If objXMLReader.Name = "Parameter" Then
+                            If blnInMethod = True Then
+                                Dim attribute As String = objXMLReader("name")
+                                Dim m As GlobalMethods = udtForm.getMethod(currentMethod)
                                 If attribute IsNot Nothing And m IsNot Nothing Then
                                     If m.parameters.ContainsKey(attribute) = True Then
-                                        If reader.Read() Then
-                                            m.parameters(attribute).desc = reader.Value.Trim()
+                                        If objXMLReader.Read() Then
+                                            m.parameters(attribute).desc = objXMLReader.Value.Trim()
                                         End If
                                     End If
                                 End If
                             End If
                         End If
 
-                        If reader.Name = "Structure" Then
-                            inMethod = False
-                            inStructure = False
-                            inGlobal = False
-                            inConstant = False
-                            Dim attribute As String = reader("name")
+                        If objXMLReader.Name = "Structure" Then
+                            blnInMethod = False
+                            blnInStructure = False
+                            blnInGlobal = False
+                            blnInConstant = False
+                            Dim attribute As String = objXMLReader("name")
                             If attribute IsNot Nothing Then
-                                inStructure = True
-                                inMethod = False
-                                inConstant = False
-                                inGlobal = False
+                                blnInStructure = True
+                                blnInMethod = False
+                                blnInConstant = False
+                                blnInGlobal = False
                                 currentStructure = attribute
                             End If
                         End If
 
-                        If reader.Name = "Method" Then
-                            inMethod = False
-                            inStructure = False
-                            inGlobal = False
-                            inConstant = False
-                            Dim attribute As String = reader("name")
+                        If objXMLReader.Name = "Method" Then
+                            blnInMethod = False
+                            blnInStructure = False
+                            blnInGlobal = False
+                            blnInConstant = False
+                            Dim attribute As String = objXMLReader("name")
                             If attribute IsNot Nothing Then
-                                inStructure = False
-                                inMethod = True
-                                inConstant = False
-                                inGlobal = False
+                                blnInStructure = False
+                                blnInMethod = True
+                                blnInConstant = False
+                                blnInGlobal = False
                                 currentMethod = attribute
                             End If
                         End If
 
-                        If reader.Name = "Global" Then
-                            inMethod = False
-                            inStructure = False
-                            inGlobal = False
-                            inConstant = False
-                            Dim attribute As String = reader("name")
+                        If objXMLReader.Name = "Global" Then
+                            blnInMethod = False
+                            blnInStructure = False
+                            blnInGlobal = False
+                            blnInConstant = False
+                            Dim attribute As String = objXMLReader("name")
                             If attribute IsNot Nothing Then
-                                inStructure = False
-                                inMethod = False
-                                inConstant = False
-                                inGlobal = True
+                                blnInStructure = False
+                                blnInMethod = False
+                                blnInConstant = False
+                                blnInGlobal = True
                                 currentGlobal = attribute
                             End If
                         End If
 
-                        If reader.Name = "Constant" Then
-                            inMethod = False
-                            inStructure = False
-                            inGlobal = False
-                            inConstant = False
-                            Dim attribute As String = reader("name")
+                        If objXMLReader.Name = "Constant" Then
+                            blnInMethod = False
+                            blnInStructure = False
+                            blnInGlobal = False
+                            blnInConstant = False
+                            Dim attribute As String = objXMLReader("name")
                             If attribute IsNot Nothing Then
-                                inStructure = False
-                                inMethod = False
-                                inConstant = True
-                                inGlobal = False
+                                blnInStructure = False
+                                blnInMethod = False
+                                blnInConstant = True
+                                blnInGlobal = False
                                 currentConstant = attribute
                             End If
 
@@ -1315,13 +1315,13 @@ Public Class CommentMaster
         '- y -                                                      -
         '------------------------------------------------------------
 
-        txtProjectName.Text = form.projectName
-        txtFormName.Text = form.fileName
-        txtAuthorName.Text = form.writtenBy
-        txtAuthorDate.Text = form.writtenOn
+        txtProjectName.Text = udtForm.projectName
+        txtFormName.Text = udtForm.strFileName
+        txtAuthorName.Text = udtForm.strWrittenBy
+        txtAuthorDate.Text = udtForm.writtenOn
 
-        txtProgramPurpose.Text = form.programPurpose
-        txtFIlePurpose.Text = form.filePurpose
+        txtProgramPurpose.Text = udtForm.programPurpose
+        txtFIlePurpose.Text = udtForm.filePurpose
 
         tabControlConstants.Controls.Clear()
         tabControlStructs.Controls.Clear()
@@ -1331,21 +1331,21 @@ Public Class CommentMaster
         btnSaveFile.Enabled = True
         btnParseFile.Enabled = True
         'Constants
-        For Each key In form.constants.Keys()
-            tabControlConstants.Controls.Add(form.constants(key).tab)
-            form.constants(key).updateInterface()
+        For Each key In udtForm.constants.Keys()
+            tabControlConstants.Controls.Add(udtForm.constants(key).tab)
+            udtForm.constants(key).updateInterface()
         Next
 
-        For Each key In form.structures.Keys()
-            form.structures(key).tab.Controls.Clear()
-            tabControlStructs.Controls.Add(form.structures(key).tab)
+        For Each key In udtForm.structures.Keys()
+            udtForm.structures(key).tab.Controls.Clear()
+            tabControlStructs.Controls.Add(udtForm.structures(key).tab)
             Dim y As Integer = 110
             Dim i As Integer
-            For Each var In form.structures(key).dimensions.Keys()
-                Dim txt As TextBox = form.structures(key).dimensions(var).txt
-                Dim lbl As Label = form.structures(key).dimensions(var).lbl
-                Dim name As String = form.structures(key).dimensions(var).name
-                Dim desc As String = form.structures(key).dimensions(var).desc
+            For Each var In udtForm.structures(key).dimensions.Keys()
+                Dim txt As TextBox = udtForm.structures(key).dimensions(var).txt
+                Dim lbl As Label = udtForm.structures(key).dimensions(var).lbl
+                Dim name As String = udtForm.structures(key).dimensions(var).name
+                Dim desc As String = udtForm.structures(key).dimensions(var).desc
 
                 lbl.AutoSize = True
                 lbl.Location = New System.Drawing.Point(50, y)
@@ -1359,71 +1359,71 @@ Public Class CommentMaster
                 txt.Size = New System.Drawing.Size(1000, 272)
                 txt.Text = desc
 
-                form.structures(key).tab.Controls.Add(lbl)
-                form.structures(key).tab.Controls.Add(txt)
+                udtForm.structures(key).tab.Controls.Add(lbl)
+                udtForm.structures(key).tab.Controls.Add(txt)
                 i = i + 1
                 y = y + 60
             Next
-            form.structures(key).updateInterface()
+            udtForm.structures(key).updateInterface()
         Next
 
         'Globals
-        For Each key In form.globals.Keys()
-            tabControlGlobalVars.Controls.Add(form.globals(key).tab)
-            form.globals(key).updateInterface()
+        For Each key In udtForm.globals.Keys()
+            tabControlGlobalVars.Controls.Add(udtForm.globals(key).tab)
+            udtForm.globals(key).updateInterface()
         Next
 
         'Methods
-        For Each key In form.methods.Keys()
-            tabControlMethods.Controls.Add(form.methods(key).tab)
-            form.methods(key).updateInterface()
+        For Each key In udtForm.methods.Keys()
+            tabControlMethods.Controls.Add(udtForm.methods(key).tab)
+            udtForm.methods(key).updateInterface()
             Dim y As Integer = 10
             Dim i As Integer
-            For Each var In form.methods(key).dimensions.Keys()
-                Dim txt As TextBox = form.methods(key).dimensions(var).txt
-                Dim lbl As Label = form.methods(key).dimensions(var).lbl
-                Dim gTxt As TextBox = form.methods(key).dimensions(var).gTxt
+            For Each var In udtForm.methods(key).dimensions.Keys()
+                Dim txt As TextBox = udtForm.methods(key).dimensions(var).txt
+                Dim lbl As Label = udtForm.methods(key).dimensions(var).lbl
+                Dim gTxt As TextBox = udtForm.methods(key).dimensions(var).gTxt
 
-                Dim desc As String = form.methods(key).dimensions(var).desc
+                Dim desc As String = udtForm.methods(key).dimensions(var).desc
 
                 lbl.AutoSize = True
                 lbl.Location = New System.Drawing.Point(30, y)
                 lbl.Name = "lblMethodFeature_" + key + "_" + var
                 lbl.Size = New System.Drawing.Size(175, 32)
                 lbl.TabIndex = 0
-                lbl.Text = form.methods(key).dimensions(var).name
+                lbl.Text = udtForm.methods(key).dimensions(var).name
 
                 txt.Location = New System.Drawing.Point(500, y)
                 txt.Name = "txtMethodFeature_" + key + "_" + var
                 txt.Size = New System.Drawing.Size(1700, 272)
                 txt.Text = desc
 
-                form.methods(key).tabFeatureVars.Controls.Add(lbl)
-                form.methods(key).tabFeatureVars.Controls.Add(txt)
+                udtForm.methods(key).tabFeatureVars.Controls.Add(lbl)
+                udtForm.methods(key).tabFeatureVars.Controls.Add(txt)
                 i = i + 1
                 y = y + 60
             Next
             y = 10
             i = 0
-            For Each var In form.methods(key).parameters.Keys()
-                Dim txt As TextBox = form.methods(key).parameters(var).txt
-                Dim lbl As Label = form.methods(key).parameters(var).lbl
-                Dim desc As String = form.methods(key).parameters(var).desc
+            For Each var In udtForm.methods(key).parameters.Keys()
+                Dim txt As TextBox = udtForm.methods(key).parameters(var).txt
+                Dim lbl As Label = udtForm.methods(key).parameters(var).lbl
+                Dim desc As String = udtForm.methods(key).parameters(var).desc
 
                 lbl.AutoSize = True
                 lbl.Location = New System.Drawing.Point(30, y)
                 lbl.Name = "lblMethodFeature_" + key + "_" + var
                 lbl.Size = New System.Drawing.Size(175, 32)
                 lbl.TabIndex = 0
-                lbl.Text = form.methods(key).parameters(var).name
+                lbl.Text = udtForm.methods(key).parameters(var).name
 
                 txt.Location = New System.Drawing.Point(500, y)
                 txt.Name = "txtMethodFeature_" + key + "_" + var
                 txt.Size = New System.Drawing.Size(1000, 272)
                 txt.Text = desc
 
-                form.methods(key).tabFeatureParameters.Controls.Add(lbl)
-                form.methods(key).tabFeatureParameters.Controls.Add(txt)
+                udtForm.methods(key).tabFeatureParameters.Controls.Add(lbl)
+                udtForm.methods(key).tabFeatureParameters.Controls.Add(txt)
                 i = i + 1
                 y = y + 60
             Next
@@ -1448,37 +1448,37 @@ Public Class CommentMaster
         '- method -                                                 -
         '------------------------------------------------------------
 
-        form.projectName = txtProjectName.Text
+        udtForm.projectName = txtProjectName.Text
 
-        form.writtenBy = txtAuthorName.Text
-        form.writtenOn = txtAuthorDate.Text
+        udtForm.strWrittenBy = txtAuthorName.Text
+        udtForm.writtenOn = txtAuthorDate.Text
 
-        form.filePurpose = txtFIlePurpose.Text
-        form.programPurpose = txtProgramPurpose.Text
+        udtForm.filePurpose = txtFIlePurpose.Text
+        udtForm.programPurpose = txtProgramPurpose.Text
 
         'Constants
-        For Each key In form.constants.Keys()
-            form.constants(key).blockDesc = form.constants(key).txt.Text
-            form.constants(key).inlineDesc = form.constants(key).txtInline.Text
+        For Each key In udtForm.constants.Keys()
+            udtForm.constants(key).blockDesc = udtForm.constants(key).txt.Text
+            udtForm.constants(key).inlineDesc = udtForm.constants(key).txtInline.Text
         Next
 
         'Structs
-        For Each key In form.structures.Keys()
-            form.structures(key).desc = form.structures(key).txt.Text
-            For Each dim_key In form.structures(key).dimensions.Keys()
-                form.structures(key).dimensions(dim_key).desc = form.structures(key).dimensions(dim_key).txt.Text
+        For Each key In udtForm.structures.Keys()
+            udtForm.structures(key).desc = udtForm.structures(key).txt.Text
+            For Each dim_key In udtForm.structures(key).dimensions.Keys()
+                udtForm.structures(key).dimensions(dim_key).desc = udtForm.structures(key).dimensions(dim_key).txt.Text
             Next
         Next
 
         'Globals
-        For Each key In form.globals.Keys()
-            form.globals(key).inlineDesc = form.globals(key).txt.Text
-            form.globals(key).blockDesc = form.globals(key).blockTxt.Text
+        For Each key In udtForm.globals.Keys()
+            udtForm.globals(key).inlineDesc = udtForm.globals(key).txt.Text
+            udtForm.globals(key).blockDesc = udtForm.globals(key).blockTxt.Text
         Next
 
         'Methods
-        For Each key In form.methods.Keys()
-            Dim method As GlobalMethods = form.methods(key)
+        For Each key In udtForm.methods.Keys()
+            Dim method As GlobalMethods = udtForm.methods(key)
 
             method.writtenBy = method.txtWrittenBy.Text
             method.writtenOn = method.txtWrittenOn.Text
@@ -1488,12 +1488,12 @@ Public Class CommentMaster
             End If
 
             method.purpose = method.txtPurpose.Text
-            For Each var In form.methods(key).dimensions.Keys()
-                form.methods(key).dimensions(var).desc = form.methods(key).dimensions(var).txt.Text
+            For Each var In udtForm.methods(key).dimensions.Keys()
+                udtForm.methods(key).dimensions(var).desc = udtForm.methods(key).dimensions(var).txt.Text
             Next
 
-            For Each var In form.methods(key).parameters.Keys()
-                form.methods(key).parameters(var).desc = form.methods(key).parameters(var).txt.Text
+            For Each var In udtForm.methods(key).parameters.Keys()
+                udtForm.methods(key).parameters(var).desc = udtForm.methods(key).parameters(var).txt.Text
             Next
         Next
     End Sub
@@ -1530,41 +1530,41 @@ Public Class CommentMaster
 
         'Project Name
         writer.WriteStartElement("ProjectName")
-        writer.WriteString(form.projectName)
+        writer.WriteString(udtForm.projectName)
         writer.WriteEndElement()
 
         'Written By
         writer.WriteStartElement("WrittenBy")
-        writer.WriteString(form.writtenBy)
+        writer.WriteString(udtForm.strWrittenBy)
         writer.WriteEndElement()
 
         'Written On
         writer.WriteStartElement("WrittenOn")
-        writer.WriteString(form.writtenOn)
+        writer.WriteString(udtForm.writtenOn)
         writer.WriteEndElement()
 
         'File purpose
         writer.WriteStartElement("FilePurpose")
-        writer.WriteString(form.filePurpose)
+        writer.WriteString(udtForm.filePurpose)
         writer.WriteEndElement()
 
         'File purpose
         writer.WriteStartElement("ProgramPurpose")
-        writer.WriteString(form.programPurpose)
+        writer.WriteString(udtForm.programPurpose)
         writer.WriteEndElement()
 
         'Parse more here
         writer.WriteStartElement("Constants")
-        For Each key In form.constants.Keys()
+        For Each key In udtForm.constants.Keys()
             writer.WriteStartElement("Constant")
             writer.WriteAttributeString("name", key)
 
             writer.WriteStartElement("Inline")
-            writer.WriteString(form.constants(key).inlineDesc)
+            writer.WriteString(udtForm.constants(key).inlineDesc)
             writer.WriteEndElement()
 
             writer.WriteStartElement("Block")
-            writer.WriteString(form.constants(key).blockDesc)
+            writer.WriteString(udtForm.constants(key).blockDesc)
             writer.WriteEndElement()
 
             writer.WriteEndElement()
@@ -1572,19 +1572,19 @@ Public Class CommentMaster
         writer.WriteEndElement()
 
         writer.WriteStartElement("Structures")
-        For Each key In form.structures.Keys()
+        For Each key In udtForm.structures.Keys()
             writer.WriteStartElement("Structure")
             writer.WriteAttributeString("name", key)
 
             writer.WriteStartElement("Description")
-            writer.WriteString(form.structures(key).desc)
+            writer.WriteString(udtForm.structures(key).desc)
             writer.WriteEndElement()
 
             writer.WriteStartElement("Dimensions")
-            For Each dim_key In form.structures(key).dimensions.Keys()
+            For Each dim_key In udtForm.structures(key).dimensions.Keys()
                 writer.WriteStartElement("Dimension")
                 writer.WriteAttributeString("name", dim_key)
-                writer.WriteString(form.structures(key).dimensions(dim_key).desc)
+                writer.WriteString(udtForm.structures(key).dimensions(dim_key).desc)
                 writer.WriteEndElement()
             Next
             writer.WriteEndElement()
@@ -1593,16 +1593,16 @@ Public Class CommentMaster
         writer.WriteEndElement()
 
         writer.WriteStartElement("Globals")
-        For Each key In form.globals.Keys()
+        For Each key In udtForm.globals.Keys()
             writer.WriteStartElement("Global")
             writer.WriteAttributeString("name", key)
 
             writer.WriteStartElement("Inline")
-            writer.WriteString(form.globals(key).inlineDesc)
+            writer.WriteString(udtForm.globals(key).inlineDesc)
             writer.WriteEndElement()
 
             writer.WriteStartElement("Block")
-            writer.WriteString(form.globals(key).blockDesc)
+            writer.WriteString(udtForm.globals(key).blockDesc)
             writer.WriteEndElement()
 
             writer.WriteEndElement()
@@ -1611,8 +1611,8 @@ Public Class CommentMaster
 
         'Methods
         writer.WriteStartElement("Methods")
-        For Each key In form.methods.Keys()
-            Dim method As GlobalMethods = form.methods(key)
+        For Each key In udtForm.methods.Keys()
+            Dim method As GlobalMethods = udtForm.methods(key)
 
             writer.WriteStartElement("Method")
             writer.WriteAttributeString("name", key)
@@ -1636,19 +1636,19 @@ Public Class CommentMaster
             writer.WriteEndElement()
 
             writer.WriteStartElement("Dimensions")
-            For Each var In form.methods(key).dimensions.Keys()
+            For Each var In udtForm.methods(key).dimensions.Keys()
                 writer.WriteStartElement("Dimension")
                 writer.WriteAttributeString("name", var)
-                writer.WriteString(form.methods(key).dimensions(var).desc)
+                writer.WriteString(udtForm.methods(key).dimensions(var).desc)
                 writer.WriteEndElement()
             Next
             writer.WriteEndElement()
 
             writer.WriteStartElement("Parameters")
-            For Each var In form.methods(key).parameters.Keys()
+            For Each var In udtForm.methods(key).parameters.Keys()
                 writer.WriteStartElement("Parameter")
                 writer.WriteAttributeString("name", var)
-                writer.WriteString(form.methods(key).parameters(var).desc)
+                writer.WriteString(udtForm.methods(key).parameters(var).desc)
                 writer.WriteEndElement()
                 'form.methods(key).parameters(var).desc = form.methods(key).parameters(var).txt.Text
             Next
@@ -2185,65 +2185,65 @@ Public Class CommentMaster
         addedLines = 0
         copyFileText.Clear()
 
-        copyFileText.AddRange(fileText)
+        copyFileText.AddRange(lstStrFileText)
 
         Dim spaces As String = "    "
 
         'File Name & Project
-        insertLine(form.line, spaces + BLOCK_ROW)
-        insertLine(form.line + addedLines, spaces + PadCenterComment("File Name: " + form.fileName))
-        insertLine(form.line + addedLines, spaces + PadCenterComment("Part of Project: " + form.projectName))
-        insertLine(form.line + addedLines, spaces + BLOCK_ROW)
+        insertLine(udtForm.line, spaces + BLOCK_ROW)
+        insertLine(udtForm.line + addedLines, spaces + PadCenterComment("File Name: " + udtForm.strFileName))
+        insertLine(udtForm.line + addedLines, spaces + PadCenterComment("Part of Project: " + udtForm.projectName))
+        insertLine(udtForm.line + addedLines, spaces + BLOCK_ROW)
 
         'Written By and Written On
-        insertLine(form.line + addedLines, spaces + PadCenterComment("Written By: " + form.writtenBy))
-        insertLine(form.line + addedLines, spaces + PadCenterComment("Written On: " + form.writtenOn))
-        insertLine(form.line + addedLines, spaces + BLOCK_ROW)
+        insertLine(udtForm.line + addedLines, spaces + PadCenterComment("Written By: " + udtForm.strWrittenBy))
+        insertLine(udtForm.line + addedLines, spaces + PadCenterComment("Written On: " + udtForm.writtenOn))
+        insertLine(udtForm.line + addedLines, spaces + BLOCK_ROW)
 
         'File purpose
-        insertLine(form.line + addedLines, spaces + PadRightComment("File Purpose:"))
-        insertLine(form.line + addedLines, spaces + PadRightComment(""))
-        insertLines(form.line + addedLines, generateWordWrappingBlock(form.filePurpose))
-        insertLine(form.line + addedLines, spaces + BLOCK_ROW)
+        insertLine(udtForm.line + addedLines, spaces + PadRightComment("File Purpose:"))
+        insertLine(udtForm.line + addedLines, spaces + PadRightComment(""))
+        insertLines(udtForm.line + addedLines, generateWordWrappingBlock(udtForm.filePurpose))
+        insertLine(udtForm.line + addedLines, spaces + BLOCK_ROW)
 
         'Program Purpose
-        insertLine(form.line + addedLines, spaces + PadRightComment("Program Purpose:"))
-        insertLine(form.line + addedLines, spaces + PadRightComment(""))
-        insertLines(form.line + addedLines, generateWordWrappingBlock(form.programPurpose))
-        insertLine(form.line + addedLines, spaces + BLOCK_ROW)
+        insertLine(udtForm.line + addedLines, spaces + PadRightComment("Program Purpose:"))
+        insertLine(udtForm.line + addedLines, spaces + PadRightComment(""))
+        insertLines(udtForm.line + addedLines, generateWordWrappingBlock(udtForm.programPurpose))
+        insertLine(udtForm.line + addedLines, spaces + BLOCK_ROW)
 
         'Global Vars
-        insertLine(form.line + addedLines, spaces + PadRightComment("Global Variables Dictionary (alphabetically)"))
+        insertLine(udtForm.line + addedLines, spaces + PadRightComment("Global Variables Dictionary (alphabetically)"))
 
         'Sort the global keys alphabetically
-        Dim global_keys As List(Of String) = form.globals.Keys.ToList
+        Dim global_keys As List(Of String) = udtForm.globals.Keys.ToList
         global_keys.Sort()
 
         Dim hasGlobal As Boolean = False
         For Each key In global_keys
-            Dim desc As String = form.globals(key).blockDesc
-            Dim name As String = form.globals(key).name
+            Dim desc As String = udtForm.globals(key).blockDesc
+            Dim name As String = udtForm.globals(key).name
 
-            insertLines(form.line + addedLines, generateVariableWithDescWrapping(name, desc))
+            insertLines(udtForm.line + addedLines, generateVariableWithDescWrapping(name, desc))
             hasGlobal = True
         Next
         'Check if we have any globals to comment anyways
         If hasGlobal = False Then
-            insertLine(form.line + addedLines, spaces + PadRightComment("(None)"))
+            insertLine(udtForm.line + addedLines, spaces + PadRightComment("(None)"))
         End If
-        insertLine(form.line + addedLines, spaces + BLOCK_ROW)
+        insertLine(udtForm.line + addedLines, spaces + BLOCK_ROW)
 
         'CONSTANTS
         'While we loop, we need to append the bannar for GLOBAL CONSTANTS, so first iteration will be used
         Dim firstConstant As Boolean = True
         'Iterate over all of the constants
 
-        For Each key In form.constants.Keys()
+        For Each key In udtForm.constants.Keys()
 
             'Grab the values from each of the classes of GlobalConstants and make local referencnes
-            Dim descInline As String = form.constants(key).inlineDesc
-            Dim name As String = form.constants(key).name
-            Dim line As Integer = form.constants(key).line
+            Dim descInline As String = udtForm.constants(key).inlineDesc
+            Dim name As String = udtForm.constants(key).name
+            Dim line As Integer = udtForm.constants(key).line
             'Check if we have the first constant being looped
             If firstConstant = True Then
                 firstConstant = False
@@ -2272,9 +2272,9 @@ Public Class CommentMaster
         'STRUCTURES
         Dim firstStructure As Boolean = True
         'MessageBox.Show(form.constants.Keys().Count.ToString)
-        For Each key In form.structures.Keys()
-            Dim desc As String = form.structures(key).desc
-            Dim line As Integer = form.structures(key).line
+        For Each key In udtForm.structures.Keys()
+            Dim desc As String = udtForm.structures(key).desc
+            Dim line As Integer = udtForm.structures(key).line
 
             If firstStructure = True Then
                 firstStructure = False
@@ -2289,11 +2289,11 @@ Public Class CommentMaster
 
             End If
 
-            insertLines(line - 1 + addedLines, generateWordWrapping("-" + desc))
+            insertLines(line - 1 + addedLines, generateWordWrapping(desc))
 
-            For Each dim_key In form.structures(key).dimensions.Keys()
-                Dim dim_desc As String = form.structures(key).dimensions(dim_key).desc
-                Dim dim_line As String = form.structures(key).dimensions(dim_key).line
+            For Each dim_key In udtForm.structures(key).dimensions.Keys()
+                Dim dim_desc As String = udtForm.structures(key).dimensions(dim_key).desc
+                Dim dim_line As String = udtForm.structures(key).dimensions(dim_key).line
 
                 Dim text As String = copyFileText(dim_line + addedLines - 1)
                 If text.Contains(Space(1) + "'" + Space(1)) Then
@@ -2302,17 +2302,17 @@ Public Class CommentMaster
                 copyFileText.RemoveAt(dim_line + addedLines - 1)
                 'Also remove a line from the list of total added
                 addedLines = addedLines - 1
-                insertLinesSpaces(dim_line + addedLines, generateInlineWordWrapping(text, "#" + dim_desc), Space(8))
+                insertLinesSpaces(dim_line + addedLines, generateInlineWordWrapping(text, dim_desc), Space(8))
 
             Next
         Next
 
         'GLOBALS (inline)
         Dim firstGlobal As Boolean = True
-        For Each key In form.globals.Keys()
-            Dim desc As String = form.globals(key).inlineDesc
-            Dim name As String = form.globals(key).name
-            Dim line As Integer = form.globals(key).line
+        For Each key In udtForm.globals.Keys()
+            Dim desc As String = udtForm.globals(key).inlineDesc
+            Dim name As String = udtForm.globals(key).name
+            Dim line As Integer = udtForm.globals(key).line
 
             'If its the first instance of a global variable, then let's add the head above it
             If firstGlobal = True Then
@@ -2346,9 +2346,9 @@ Public Class CommentMaster
 
         'Methods
         Dim firstMethod As Boolean = True
-        For Each key In form.methods.Keys()
-            Dim line As Integer = form.methods(key).line
-            Dim method As GlobalMethods = form.methods(key)
+        For Each key In udtForm.methods.Keys()
+            Dim line As Integer = udtForm.methods(key).line
+            Dim method As GlobalMethods = udtForm.methods(key)
 
             'Are we in the first method? If so let's add the header of SUBPROGRAMS above it.
             If firstMethod = True Then
@@ -2383,15 +2383,15 @@ Public Class CommentMaster
 
             'Parameters
             insertLine(line + addedLines, spaces + PadRightComment("Parameter Dictionary (in parameter order):"))
-            For Each param_key In form.methods(key).parameters.Keys()
-                Dim name As String = form.methods(key).parameters(param_key).name
-                Dim desc As String = form.methods(key).parameters(param_key).desc
+            For Each param_key In udtForm.methods(key).parameters.Keys()
+                Dim name As String = udtForm.methods(key).parameters(param_key).name
+                Dim desc As String = udtForm.methods(key).parameters(param_key).desc
 
                 insertLinesSpaces(line + addedLines, generateVariableWithDescWrapping(name, desc), spaces)
             Next
 
             'Check if we have no parameters, if so just list none
-            If form.methods(key).parameters.Count = 0 Then
+            If udtForm.methods(key).parameters.Count = 0 Then
                 insertLine(line + addedLines, spaces + PadRightComment("(None)"))
             End If
             insertLine(line + addedLines, spaces + BLOCK_ROW)
@@ -2405,8 +2405,8 @@ Public Class CommentMaster
 
             'Iterate over all of the dimension keys, and insert the descriptions with word wrapping
             For Each dim_key As String In keys
-                Dim name As String = form.methods(key).dimensions(dim_key).name
-                Dim desc As String = form.methods(key).dimensions(dim_key).desc
+                Dim name As String = udtForm.methods(key).dimensions(dim_key).name
+                Dim desc As String = udtForm.methods(key).dimensions(dim_key).desc
                 insertLinesSpaces(line + addedLines, generateVariableWithDescWrapping(name, desc), spaces)
             Next
             'Check if we have no dimensions, if so just list none
@@ -2424,7 +2424,7 @@ Public Class CommentMaster
             insertLine(line + addedLines, "")
         Next
 
-        Dim tempFilePath As String = System.IO.Path.Combine(path, filePath)
+        Dim tempFilePath As String = System.IO.Path.Combine(path, strProgramFilePath)
         'Dim tempFile As FileStream = System.IO.File.Open(tempFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite)
         Using sr As StreamWriter = New StreamWriter(tempFilePath)
             Dim lastLineWasEmpty As String = False
