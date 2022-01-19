@@ -157,8 +157,7 @@ Class Dimension
         name = n
 
         If name = "sender" Then
-            desc = "Identifies which particular control that raised -
-        '-          the click event"
+            desc = "Identifies which particular control that raised the click event"
         ElseIf name = "e" Then
             desc = "Holds the EventArgs object sent to the routine"
         End If
