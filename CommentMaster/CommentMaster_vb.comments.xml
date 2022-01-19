@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <CommentMaster author="Brendan Fuller (https://importprogram.me)" version="311">
-  <ProjectName>CommentMaster</ProjectName>
+  <ProjectName>BobMaster</ProjectName>
   <WrittenBy>Brendan Fuller</WrittenBy>
   <WrittenOn>January, 17 2022</WrittenOn>
   <FilePurpose>This file contains the main form for the application. All operations are performed by this application ocurr from this file.</FilePurpose>

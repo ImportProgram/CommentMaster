@@ -157,9 +157,10 @@ Class Dimension
         name = n
 
         If name = "sender" Then
-            desc = "Identifies which particular control that raised the click Event"
+            desc = "Identifies which particular control that raised -
+        '-          the click event"
         ElseIf name = "e" Then
-            desc = "Holds the EventArgs Object sent To the routine"
+            desc = "Holds the EventArgs object sent to the routine"
         End If
 
         line = l
@@ -611,7 +612,7 @@ Public Class CommentMaster
     '-                                                                                  of
     '-                                                                                  comments.
     Const SOMETHING = 1 ' Just a test constant. Use for debugging.
-
+    Const MAX_COLUMN_WIDTH = 115
     '-------------------------------------------------------------------------------------------
     '--- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES ---
     '--- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES --- GLOBAL STRUCTURES ---
@@ -1779,7 +1780,7 @@ Public Class CommentMaster
         'Split a list of words
         Dim words As String() = Split(Regex.Replace(desc.Replace(vbCrLf, ""), " {2,}", " "), " ")
         'Get a total length of the comment minus 4 for the comment structure
-        Dim total As Integer = 94
+        Dim total As Integer = MAX_COLUMN_WIDTH
         'The lines to be returned
         Dim lines As New List(Of String)
         'The current line to be generated
@@ -1930,7 +1931,7 @@ Public Class CommentMaster
         'Split a list of words
         Dim words As String() = Split(Regex.Replace(text.Replace(vbCrLf, ""), " {2,}", " "), " ")
         'Get a total length of the comment minus 4 for the comment structure
-        Dim total As Integer = 94
+        Dim total As Integer = MAX_COLUMN_WIDTH
         'The lines to be returned
         Dim lines As New List(Of String)
         'The current line to be generated
